@@ -20,10 +20,11 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install & Build
+      - name: Install & Test & Build
         run: |
           cd apps/basics
           npm install
+          npm run test
           npm run build
 
       - name: Deploy to GitHub Pages
