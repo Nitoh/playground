@@ -3,7 +3,7 @@ name: Deploy Vue App to Pages
 on:
   push:
     branches:
-      - main  # Der Workflow startet jedes Mal, wenn du in 'main' pushst
+      - master  # Der Workflow startet jedes Mal, wenn du in 'master' pushst
 
 permissions:
   contents: write
