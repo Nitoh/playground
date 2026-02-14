@@ -1,0 +1,14 @@
+services:
+  # Name deines Dienstes
+  frontend:
+    # Pfad zum Ordner, in dem das Dockerfile liegt
+    build:
+      context: ./apps/basics
+      dockerfile: Dockerfile
+    # Name, den der Container beim Starten bekommt
+    container_name: vue-playground-app
+    # Port-Mapping: Außen (dein PC) : Innen (Nginx im Container)
+    ports:
+      - "8080:80"
+    # Sorgt dafür, dass der Container bei Absturz neu startet
+    restart: always

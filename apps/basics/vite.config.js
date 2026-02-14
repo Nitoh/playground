@@ -6,7 +6,9 @@ import vueDevTools from 'vite-plugin-vue-devtools'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/playground/',
+  base: process.env.DEPLOY_TARGET === 'gh-pages'
+    ? '/playground/'
+    : '/',
   plugins: [
     vue(),
     vueDevTools(),

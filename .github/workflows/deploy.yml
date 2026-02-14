@@ -21,6 +21,9 @@ jobs:
           node-version: 22
 
       - name: Install & Test & Build
+        env:
+          # Hier setzen wir die Variable nur für diesen Workflow
+          DEPLOY_TARGET: gh-pages
         run: |
           cd apps/basics
           npm install
