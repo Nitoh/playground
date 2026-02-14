@@ -1,7 +1,7 @@
 import { expect, test } from 'vitest'
 
 test('Grundrechenarten funktionieren', () => {
-    expect(1 + 1).toBe(3)
+    expect(1 + 1).toBe(2)
 })
 
 // Dieser Test simuliert einen Logik-Fehler
