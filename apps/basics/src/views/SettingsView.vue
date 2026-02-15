@@ -1,0 +1,1 @@
+<template><h1>Einstellungen</h1><p>Hier kannst du alles konfigurieren.</p></template>
