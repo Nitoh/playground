@@ -14,10 +14,10 @@ export const tools = [
         path: '/tools/color-picker'
     },
     {
-        key: 'markdown-preview',
-        title: 'Markdown Preview',
-        description: 'Rendert Markdown live und hilft bei der Dokumentation.',
-        category: 'Produktiv',
-        path: '/tools/markdown-preview'
+        key: 'live-chat',
+        title: 'Live Chat',
+        description: 'Ermöglicht Echtzeit-Kommunikation mit anderen Benutzern.',
+        category: 'Produktivität',
+        path: '/tools/live-chat'
     }
 ]

@@ -1,9 +1,7 @@
 <template>
   <div class="container">
     <div class="app-logo">
-      <button style="border-radius: 50%; padding:0%; border:none; background:transparent; cursor:pointer;">
-        <img :src="logo" alt="Logo" width="40" height="40" class="logo-image" />
-      </button>
+      <img :src="logo" alt="Logo" width="40" height="40" class="logo-image" />
     </div>
 
     <nav>
@@ -42,8 +40,7 @@ import logo from '@/assets/logo-transparent.png'
 const navLinks = [
   { name: 'Home', path: '/' },
   { name: 'Tools', path: '/tools' },
-  { name: 'Einstellungen', path: '/settings' },
-  { name: 'Registrierung', path: '/registration' }
+  { name: 'Einstellungen', path: '/settings' }
 ]
 </script>
 
