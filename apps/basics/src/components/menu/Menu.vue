@@ -6,17 +6,27 @@
 
     <nav>
       <ul>
-        <li v-for="link in navLinks" :key="link.path">
-          <router-link :to="link.path">{{ link.name }}</router-link>
-        </li>
+        <template v-for="(link, idx) in navLinks" :key="link.path">
+          <li v-if="!link.isDropdown" class="nav-item">
+            <router-link :to="link.path">{{ link.name }}</router-link>
+          </li>
+          <li v-else class="dropdown-container">
+            <button class="dropdown-btn">
+              {{ link.name }}
+              <span class="arrow">›</span>
+            </button>
+            <ul class="dropdown-menu">
+              <li v-for="tool in toolsItems" :key="tool.name">
+                <router-link :to="tool.path">{{ tool.name }}</router-link>
+              </li>
+            </ul>
+          </li>
+        </template>
       </ul>
     </nav>
 
     <nav class="menu">
       <ul>
-        <button @click="toggleTheme" class="theme-btn">
-          {{ isDark ? 'Light Mode' : 'Dark Mode' }}
-        </button>
         <!-- <DropdownMenu ref="myDropdown">
           <button class="theme-btn">Settings ⚙️</button>
           <template #trigger>
@@ -45,8 +55,15 @@ import logo from '@/assets/logo-transparent.png'
 const myDropdown = ref(null)
 const navLinks = [
   { name: 'Home', path: '/' },
-  { name: 'Settings', path: '/settings' },
-  { name: 'Registration', path: '/registration' }
+  { name: 'Tools', path: '#', isDropdown: true },
+  { name: 'Einstellungen', path: '/settings' },
+  { name: 'Registrierung', path: '/registration' }
+]
+
+const toolsItems = [
+  { name: 'Tool 1', path: '/tools/1' },
+  { name: 'Tool 2', path: '/tools/2' },
+  { name: 'Tool 3', path: '/tools/3' }
 ]
 
 const doSomething = () => {
@@ -55,17 +72,6 @@ const doSomething = () => {
 }
 
 const isDark = ref(false)
-
-const toggleTheme = () => {
-  isDark.value = !isDark.value
-  const theme = isDark.value ? 'dark' : 'light'
-
-  // Wir setzen das Attribut direkt am HTML-Tag
-  document.documentElement.setAttribute('data-theme', theme)
-
-  // Optional: In LocalStorage speichern, damit es beim Refresh bleibt
-  localStorage.setItem('user-theme', theme)
-}
 
 onMounted(() => {
   // Beim Laden prüfen, ob der User eine Präferenz gespeichert hat
@@ -99,6 +105,7 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 0.5rem;
 }
 
 .app-logo {
@@ -154,5 +161,87 @@ li a {
 
 .dropdown-list li:hover {
   background: var(--hover-color, #f0f0f0);
+}
+
+.dropdown-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-btn {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-main);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+  transition: all 0.2s ease;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: 1;
+}
+
+.dropdown-btn:hover {
+  background: var(--bg-surface);
+  border-color: var(--border-color);
+}
+
+.arrow {
+  display: inline-block;
+  font-size: 1em;
+  transition: transform 0.2s ease;
+}
+
+.dropdown-container:hover .arrow {
+  transform: rotate(90deg);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  min-width: 150px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0.5rem 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+  z-index: 100;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-container:hover .dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-menu li {
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+  border: none;
+}
+
+.dropdown-menu li a {
+  display: block;
+  padding: 0.5rem 1rem;
+  transition: background 0.15s ease;
+}
+
+.dropdown-menu li a:hover {
+  background: var(--menu-bg-hover);
 }
 </style>
