@@ -1,27 +1,16 @@
 <template>
   <div class="container">
     <div class="app-logo">
-      <img :src="logo" alt="Logo" width="40" height="40" class="logo-image" />
+      <button style="border-radius: 50%; padding:0%; border:none; background:transparent; cursor:pointer;">
+        <img :src="logo" alt="Logo" width="40" height="40" class="logo-image" />
+      </button>
     </div>
 
     <nav>
       <ul>
-        <template v-for="(link, idx) in navLinks" :key="link.path">
-          <li v-if="!link.isDropdown" class="nav-item">
-            <router-link :to="link.path">{{ link.name }}</router-link>
-          </li>
-          <li v-else class="dropdown-container">
-            <button class="dropdown-btn">
-              {{ link.name }}
-              <span class="arrow">›</span>
-            </button>
-            <ul class="dropdown-menu">
-              <li v-for="tool in toolsItems" :key="tool.name">
-                <router-link :to="tool.path">{{ tool.name }}</router-link>
-              </li>
-            </ul>
-          </li>
-        </template>
+        <li v-for="link in navLinks" :key="link.path" class="nav-item">
+          <router-link :to="link.path">{{ link.name }}</router-link>
+        </li>
       </ul>
     </nav>
 
@@ -48,39 +37,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import DropdownMenu from './SettingsDropdown.vue'
 import logo from '@/assets/logo-transparent.png'
 
-const myDropdown = ref(null)
 const navLinks = [
   { name: 'Home', path: '/' },
-  { name: 'Tools', path: '#', isDropdown: true },
+  { name: 'Tools', path: '/tools' },
   { name: 'Einstellungen', path: '/settings' },
   { name: 'Registrierung', path: '/registration' }
 ]
-
-const toolsItems = [
-  { name: 'Tool 1', path: '/tools/1' },
-  { name: 'Tool 2', path: '/tools/2' },
-  { name: 'Tool 3', path: '/tools/3' }
-]
-
-const doSomething = () => {
-  console.log("Aktion ausgeführt")
-  myDropdown.value.close() // Schließt das Menü nach dem Klick
-}
-
-const isDark = ref(false)
-
-onMounted(() => {
-  // Beim Laden prüfen, ob der User eine Präferenz gespeichert hat
-  const savedTheme = localStorage.getItem('user-theme')
-  if (savedTheme === 'dark') {
-    isDark.value = true
-    document.documentElement.setAttribute('data-theme', 'dark')
-  }
-})
 </script>
 
 <style scoped>
@@ -97,8 +61,10 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0rem;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
   margin: 0;
+  flex-wrap: wrap;
 }
 
 .menu {
@@ -143,6 +109,7 @@ li {
 }
 
 li a {
+  display: inline-block;
   text-decoration: none;
   color: inherit;
 }
@@ -163,85 +130,31 @@ li a {
   background: var(--hover-color, #f0f0f0);
 }
 
-.dropdown-container {
-  position: relative;
-  display: flex;
-  align-items: center;
+@media (max-width: 900px) {
+  .container {
+    justify-content: center;
+    row-gap: 0.5rem;
+  }
+
+  nav ul {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .menu {
+    width: 100%;
+    padding: 0;
+  }
 }
 
-.dropdown-btn {
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  border-radius: 8px;
-  border: 1px solid transparent;
-  background: transparent;
-  color: var(--text-main);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.15rem;
-  transition: all 0.2s ease;
-  font-size: inherit;
-  font-weight: inherit;
-  line-height: 1;
-}
+@media (max-width: 640px) {
+  .app-logo {
+    display: none;
+  }
 
-.dropdown-btn:hover {
-  background: var(--bg-surface);
-  border-color: var(--border-color);
-}
-
-.arrow {
-  display: inline-block;
-  font-size: 1em;
-  transition: transform 0.2s ease;
-}
-
-.dropdown-container:hover .arrow {
-  transform: rotate(90deg);
-}
-
-.dropdown-menu {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  min-width: 150px;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  list-style: none;
-  margin: 0;
-  padding: 0.5rem 0;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-8px);
-  transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
-  z-index: 100;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.dropdown-container:hover .dropdown-menu {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.dropdown-menu li {
-  padding: 0;
-  margin: 0;
-  border-radius: 0;
-  border: none;
-}
-
-.dropdown-menu li a {
-  display: block;
-  padding: 0.5rem 1rem;
-  transition: background 0.15s ease;
-}
-
-.dropdown-menu li a:hover {
-  background: var(--menu-bg-hover);
+  li {
+    padding: 0.35rem 0.4rem;
+    font-size: 0.95rem;
+  }
 }
 </style>

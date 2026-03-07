@@ -47,7 +47,7 @@ const activeView = ref('profil')
 .container {
     display: flex;
     gap: 2rem;
-    overflow: hidden;
+    overflow: visible;
     margin: 0;
     padding: 0;
     align-items: flex-start;
@@ -101,5 +101,39 @@ li.active {
 
 .content :deep(p) {
     margin-top: 0;
+}
+
+@media (max-width: 900px) {
+    .container {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .menu {
+        width: 100%;
+        padding: 0;
+    }
+
+    ul {
+        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.5rem 1rem;
+    }
+
+    li {
+        width: auto;
+        padding: 0.35rem 0;
+    }
+}
+
+@media (max-width: 640px) {
+    .menu h2 {
+        font-size: 1.25rem;
+    }
+
+    .content :deep(h2) {
+        font-size: 1.15rem;
+    }
 }
 </style>

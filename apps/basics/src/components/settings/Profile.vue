@@ -174,4 +174,16 @@ onMounted(() => {
     outline: 2px solid var(--accent);
     outline-offset: 2px;
 }
+
+@media (max-width: 640px) {
+    .settings-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.6rem;
+    }
+
+    .switch {
+        align-self: flex-end;
+    }
+}
 </style>

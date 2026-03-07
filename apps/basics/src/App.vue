@@ -129,4 +129,16 @@ body {
   /* Damit der Overlay-Effekt greift, müssen wir das Bild über die Color legen */
   background-blend-mode: overlay;
 }
+
+@media (max-width: 992px) {
+  .content-area {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .content-area {
+    padding: 1rem;
+  }
+}
 </style>
