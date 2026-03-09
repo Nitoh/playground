@@ -55,8 +55,10 @@
 }
 
 .content {
-    padding: 1.25rem;
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    overflow: hidden;
 }
 
 @media (max-width: 800px) {
