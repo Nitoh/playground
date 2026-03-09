@@ -39,10 +39,10 @@ jobs:
       - name: Deploy basics to GitHub Pages subpath
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: apps/basics/dist # Wo liegt das Ergebnis?
-          branch: gh-pages         # Wohin soll es geschoben werden?
+          folder: apps/basics/dist
+          branch: gh-pages
           target-folder: basics
-          clean: true
+          clean: false
 
       - name: Deploy chat-ui to GitHub Pages subpath
         uses: JamesIves/github-pages-deploy-action@v4
