@@ -1,0 +1,1 @@
+import{e as a,o as n,c as o,a as t}from"./D5nUrxux.js";const p=a({__name:"chat",setup(l){return(r,e)=>(n(),o("div",null,[...e[0]||(e[0]=[t("h1",null,"Chat UI",-1),t("p",null,"Chat..",-1)])]))}});export{p as default};
