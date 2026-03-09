@@ -5,8 +5,9 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: false,
   app: {
-    // Für Repo-Page: https://<user>.github.io/playground/chat-ui/
-    baseURL: '/playground/chat-ui/'
-    // Bei Custom Domain ggf. '/chat-ui/'
+    // Fuer Repo-Page: https://<user>.github.io/playground/chat-ui/
+    baseURL: '/playground/chat-ui/',
+    // GitHub Pages + Jekyll: vermeidet den Default-Ordner "_nuxt"
+    buildAssetsDir: 'assets/'
   }
 })
