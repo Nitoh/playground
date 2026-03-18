@@ -1,8 +1,12 @@
 <template>
     <div class="chat-page">
         <ChatHeader />
-        <MessageList :messages="messages" />
-        <ChatInput @send-message="handleSendMessage" />
+        <div class="messages-area">
+            <MessageList :messages="messages" />
+        </div>
+        <div class="input-area">
+            <ChatInput @send-message="handleSendMessage" />
+        </div>
     </div>
 </template>
 
@@ -18,7 +22,6 @@ const messages = ref<Message[]>([]);
 const handleSendMessage = (message: string) => {
     messages.value.push({ id: messages.value.length + 1, text: message, sender: 'user' });
 
-    // Demo: Antwort von "bot" nach kurzer Verzögerung
     setTimeout(() => {
         messages.value.push({
             id: Date.now() + 1,
@@ -26,17 +29,34 @@ const handleSendMessage = (message: string) => {
             sender: 'bot'
         });
     }, 400);
-}
-
+};
 </script>
 
 <style scoped>
 .chat-page {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: 100dvh;
+    /* wichtig für Mobile */
+    min-height: 100dvh;
+    /* Fallback */
+    overflow: hidden;
+    /* Seite selbst scrollt nicht */
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+.messages-area {
+    flex: 1;
+    min-height: 0;
+    /* wichtig, damit MessageList korrekt scrollt */
+}
+
+.input-area {
+    flex-shrink: 0;
+    padding-bottom: env(safe-area-inset-bottom);
+    /* iPhone safe area */
+    background: #fff;
 }
 </style>
