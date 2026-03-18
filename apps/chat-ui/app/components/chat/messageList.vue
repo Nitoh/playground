@@ -23,6 +23,7 @@ defineProps<{
     flex-direction: column;
     flex: 1;
     overflow-y: auto;
+    height: 100%;
     border-radius: 0.5rem;
     border: 0.5px solid #e5e7eb;
     box-sizing: border-box;

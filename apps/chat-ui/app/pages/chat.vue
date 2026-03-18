@@ -37,11 +37,8 @@ const handleSendMessage = (message: string) => {
     display: flex;
     flex-direction: column;
     height: 100dvh;
-    /* wichtig für Mobile */
-    min-height: 100dvh;
-    /* Fallback */
     overflow: hidden;
-    /* Seite selbst scrollt nicht */
+    /* Seite selbst scrollt NICHT */
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -50,13 +47,16 @@ const handleSendMessage = (message: string) => {
 .messages-area {
     flex: 1;
     min-height: 0;
-    /* wichtig, damit MessageList korrekt scrollt */
+    overflow-y: auto;
+    display: flex;
+    /* NEU */
+    flex-direction: column;
+    /* NEU */
 }
 
 .input-area {
     flex-shrink: 0;
     padding-bottom: env(safe-area-inset-bottom);
-    /* iPhone safe area */
     background: #fff;
 }
 </style>
