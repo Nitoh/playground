@@ -20,8 +20,11 @@
 import { onMounted, onUnmounted } from 'vue';
 
 const updateHeight = () => {
-    const h = window.visualViewport?.height ?? window.innerHeight;
+    const vv = window.visualViewport;
+    const h = vv?.height ?? window.innerHeight;
+    const top = vv?.offsetTop ?? 0;
     document.documentElement.style.setProperty('--shell-height', `${h}px`);
+    document.documentElement.style.setProperty('--shell-top', `${top}px`);
 };
 
 onMounted(() => {
@@ -81,6 +84,10 @@ onUnmounted(() => {
 
 @media (max-width: 800px) {
     .shell {
+        position: fixed;
+        top: var(--shell-top, 0);
+        left: 0;
+        right: 0;
         grid-template-columns: 1fr;
         grid-template-rows: auto 1fr;
         height: var(--shell-height, 100dvh);
