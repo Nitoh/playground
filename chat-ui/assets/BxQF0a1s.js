@@ -1,0 +1,1 @@
+import{_ as n,c as o,a as t,o as a}from"./BhnN8uIx.js";const c={};function l(r,e){return a(),o("div",null,[...e[0]||(e[0]=[t("h1",null,"Chat UI",-1),t("p",null,"Welcome to the Chat UI application!",-1)])])}const i=n(c,[["render",l]]);export{i as default};
