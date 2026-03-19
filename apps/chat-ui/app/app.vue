@@ -14,6 +14,5 @@ body {
   background: #ffffff;
   color: #111827;
   /* height: 100%; */
-  overflow: hidden;
 }
 </style>

@@ -41,6 +41,8 @@ const sendMessage = () => {
     padding: 8px;
     border: 0.5px solid #ccc;
     border-radius: 6px;
+    font-size: 16px;
+    /* verhindert Auto-Zoom auf iOS Safari */
 }
 
 .btn-blue {

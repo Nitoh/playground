@@ -1,5 +1,5 @@
 <template>
-    <div class="chat-container">
+    <div ref="container" class="chat-container">
         <ul class="list">
             <li v-for="message in messages" :key="message.id" class="row"
                 :class="{ 'row-me': message.sender === 'user', 'row-bot': message.sender === 'bot' }">
@@ -10,11 +10,24 @@
 </template>
 
 <script setup lang="ts">
+import { ref, watch, nextTick } from 'vue';
 import type { Message } from '~/types/message';
 
-defineProps<{
+const props = defineProps<{
     messages: Message[];
 }>();
+
+const container = ref<HTMLElement | null>(null);
+
+watch(
+    () => props.messages.length,
+    async () => {
+        await nextTick();
+        if (container.value) {
+            container.value.scrollTop = container.value.scrollHeight;
+        }
+    }
+);
 </script>
 
 <style scoped>
