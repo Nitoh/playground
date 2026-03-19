@@ -1,0 +1,1 @@
+import{_ as t,c as s,a as n,o as l}from"./ZyjQ9T-r.js";const o={};function r(c,e){return l(),s("div",null,[...e[0]||(e[0]=[n("h1",null,"Einstellungen",-1),n("p",null,"Einstellungsmöglichkeiten..",-1)])])}const i=t(o,[["render",r]]);export{i as default};
