@@ -22,18 +22,22 @@ import { onMounted, onUnmounted } from 'vue';
 const updateHeight = () => {
     const vv = window.visualViewport;
     const h = vv?.height ?? window.innerHeight;
-    const top = vv?.offsetTop ?? 0;
     document.documentElement.style.setProperty('--shell-height', `${h}px`);
-    document.documentElement.style.setProperty('--shell-top', `${top}px`);
+};
+
+const preventBodyScroll = () => {
+    window.scrollTo(0, 0);
 };
 
 onMounted(() => {
     updateHeight();
     window.visualViewport?.addEventListener('resize', updateHeight);
+    window.visualViewport?.addEventListener('scroll', preventBodyScroll);
 });
 
 onUnmounted(() => {
     window.visualViewport?.removeEventListener('resize', updateHeight);
+    window.visualViewport?.removeEventListener('scroll', preventBodyScroll);
 });
 </script>
 
@@ -85,7 +89,7 @@ onUnmounted(() => {
 @media (max-width: 800px) {
     .shell {
         position: fixed;
-        top: var(--shell-top, 0);
+        top: 0;
         left: 0;
         right: 0;
         grid-template-columns: 1fr;
