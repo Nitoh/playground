@@ -16,11 +16,29 @@
     </div>
 </template>
 
+<script setup lang="ts">
+import { onMounted, onUnmounted } from 'vue';
+
+const updateHeight = () => {
+    const h = window.visualViewport?.height ?? window.innerHeight;
+    document.documentElement.style.setProperty('--shell-height', `${h}px`);
+};
+
+onMounted(() => {
+    updateHeight();
+    window.visualViewport?.addEventListener('resize', updateHeight);
+});
+
+onUnmounted(() => {
+    window.visualViewport?.removeEventListener('resize', updateHeight);
+});
+</script>
+
 <style scoped>
 .shell {
     display: grid;
     grid-template-columns: 240px 1fr;
-    height: 100vh;
+    height: var(--shell-height, 100dvh);
     overflow: hidden;
 }
 
@@ -65,7 +83,7 @@
     .shell {
         grid-template-columns: 1fr;
         grid-template-rows: auto 1fr;
-        height: 100dvh;
+        height: var(--shell-height, 100dvh);
         overflow: hidden;
     }
 
