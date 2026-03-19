@@ -7,7 +7,10 @@
         <form class="form" @submit.prevent="submitSelection">
             <label v-for="flag in flags" :key="flag.code" class="row">
                 <input v-model="selectedCodes" type="checkbox" :value="flag.code" />
-                <span>{{ flag.emoji }} {{ flag.label }}</span>
+                <span class="flag-wrap" aria-hidden="true">
+                    <img class="flag-icon" :src="flagIconUrl(flag.code)" :alt="`${flag.label} Flagge`" loading="lazy" />
+                </span>
+                <span>{{ flag.label }}</span>
             </label>
 
             <div class="actions">
@@ -52,6 +55,10 @@ watch(
 const submitSelection = () => {
     emit('submit', [...selectedCodes.value]);
 };
+
+const flagIconUrl = (code: string) => {
+    return `https://flagcdn.com/24x18/${code.toLowerCase()}.png`;
+};
 </script>
 
 <style scoped>
@@ -65,6 +72,23 @@ const submitSelection = () => {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+}
+
+.flag-wrap {
+    width: 24px;
+    height: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+}
+
+.flag-icon {
+    width: 24px;
+    height: 18px;
+    border-radius: 2px;
+    object-fit: cover;
+    box-sizing: border-box;
 }
 
 .actions {
