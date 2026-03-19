@@ -64,8 +64,9 @@
 @media (max-width: 800px) {
     .shell {
         grid-template-columns: 1fr;
-        height: auto;
-        overflow: visible;
+        grid-template-rows: auto 1fr;
+        height: 100dvh;
+        overflow: hidden;
     }
 
     .sidebar {
@@ -75,7 +76,9 @@
     }
 
     .content {
-        overflow-y: visible;
+        overflow: hidden;
+        min-height: 0;
+        padding: 0;
     }
 
     .menu {
