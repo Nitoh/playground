@@ -1,7 +1,7 @@
 <template>
     <BaseModal :open="open" @close="emit('close')">
         <template #header>
-            <h2>Flags auswaehlen</h2>
+            <h2>Flags auswählen</h2>
         </template>
 
         <form class="form" @submit.prevent="submitSelection">
