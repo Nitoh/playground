@@ -4,9 +4,18 @@
             <h2 class="brand">Chat UI</h2>
 
             <nav class="menu">
-                <NuxtLink to="/" class="link">Home</NuxtLink>
-                <NuxtLink to="/chat" class="link">Chats</NuxtLink>
-                <NuxtLink to="/settings" class="link">Einstellungen</NuxtLink>
+                <NuxtLink to="/" class="link">
+                    <AppIcon name="home" :size="17" />
+                    <span>Home</span>
+                </NuxtLink>
+                <NuxtLink to="/chat" class="link">
+                    <AppIcon name="chat" :size="17" />
+                    <span>Chats</span>
+                </NuxtLink>
+                <NuxtLink to="/settings" class="link">
+                    <AppIcon name="settings" :size="17" />
+                    <span>Einstellungen</span>
+                </NuxtLink>
             </nav>
         </aside>
 
@@ -18,6 +27,7 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue';
+import AppIcon from '~/components/ui/AppIcon.vue';
 
 const updateHeight = () => {
     const vv = window.visualViewport;
@@ -62,6 +72,9 @@ onUnmounted(() => {
 }
 
 .link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
     text-decoration: none;
     color: #111827;
     padding: 0.5rem 0.75rem;

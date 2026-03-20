@@ -2,13 +2,14 @@
     <div class="settings-page">
         <header class="settings-header">
             <button v-if="activeGroupId || activeEntryId" type="button" class="back-btn" @click="goBack">
-                <span aria-hidden="true">←</span>
+                <AppIcon name="chevron-left" :size="16" />
                 Zurück
             </button>
 
             <nav class="breadcrumb" aria-label="Pfad">
                 <button type="button" class="crumb" :class="{ active: !activeGroupId && !activeEntryId }"
                     @click="goToRoot">
+                    <AppIcon name="settings" :size="14" />
                     Einstellungen
                 </button>
 
@@ -34,8 +35,11 @@
                 <div class="list-card">
                     <button v-for="group in settingGroups" :key="group.id" type="button" class="list-row"
                         @click="openGroup(group.id)">
-                        <span>{{ group.label }}</span>
-                        <span class="chevron" aria-hidden="true">›</span>
+                        <span class="row-main">
+                            <AppIcon :name="group.icon" :size="17" />
+                            {{ group.label }}
+                        </span>
+                        <AppIcon class="chevron" name="chevron-right" :size="16" />
                     </button>
                 </div>
             </div>
@@ -47,8 +51,11 @@
                 <div class="list-card">
                     <button v-for="entry in activeGroup.entries" :key="entry.id" type="button" class="list-row"
                         @click="openEntry(entry.id)">
-                        <span>{{ entry.label }}</span>
-                        <span class="chevron" aria-hidden="true">›</span>
+                        <span class="row-main">
+                            <AppIcon :name="entry.icon" :size="17" />
+                            {{ entry.label }}
+                        </span>
+                        <AppIcon class="chevron" name="chevron-right" :size="16" />
                     </button>
                 </div>
             </div>
@@ -62,6 +69,7 @@
 
 <script setup lang="ts">
 import { computed, ref, type Component } from 'vue';
+import AppIcon from '~/components/ui/AppIcon.vue';
 import ChatBehaviorSettings from '~/components/settings/ChatBehaviorSettings.vue';
 import LocalStorageSettings from '~/components/settings/LocalStorageSettings.vue';
 import ProfileSettings from '~/components/settings/ProfileSettings.vue';
@@ -69,12 +77,14 @@ import ProfileSettings from '~/components/settings/ProfileSettings.vue';
 type SettingsEntry = {
     id: string;
     label: string;
+    icon: string;
     component: Component;
 };
 
 type SettingsGroup = {
     id: string;
     label: string;
+    icon: string;
     entries: SettingsEntry[];
 };
 
@@ -82,22 +92,25 @@ const settingGroups: SettingsGroup[] = [
     {
         id: 'data',
         label: 'Daten',
+        icon: 'database',
         entries: [
-            { id: 'local-storage', label: 'LocalStorage', component: LocalStorageSettings }
+            { id: 'local-storage', label: 'LocalStorage', icon: 'database', component: LocalStorageSettings }
         ]
     },
     {
         id: 'chat',
         label: 'Chat',
+        icon: 'sliders',
         entries: [
-            { id: 'chat-behavior', label: 'Verhalten', component: ChatBehaviorSettings }
+            { id: 'chat-behavior', label: 'Verhalten', icon: 'sliders', component: ChatBehaviorSettings }
         ]
     },
     {
         id: 'profile',
         label: 'Profil',
+        icon: 'user',
         entries: [
-            { id: 'profile', label: 'Allgemein', component: ProfileSettings }
+            { id: 'profile', label: 'Allgemein', icon: 'user', component: ProfileSettings }
         ]
     }
 ];
@@ -191,6 +204,9 @@ const goBack = () => {
 }
 
 .crumb {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
     border: none;
     background: transparent;
     color: #6b7280;
@@ -288,9 +304,14 @@ const goBack = () => {
     background: #fafafa;
 }
 
+.row-main {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+}
+
 .chevron {
     color: #9ca3af;
-    font-size: 1.05rem;
 }
 
 @media (max-width: 800px) {
