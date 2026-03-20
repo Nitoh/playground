@@ -1,6 +1,6 @@
 <template>
     <div class="settings-page">
-        <header v-if="activeGroupId || activeEntryId" class="settings-header">
+        <header class="settings-header">
             <button v-if="activeGroupId || activeEntryId" type="button" class="back-btn" @click="goBack">
                 <span aria-hidden="true">←</span>
                 Zurück
@@ -29,7 +29,6 @@
 
         <section class="settings-content">
             <div v-if="!activeGroupId" class="stack-view">
-                <h1>Einstellungen</h1>
                 <p class="view-subtitle">Wähle einen Bereich aus.</p>
 
                 <div class="list-card">
@@ -41,7 +40,7 @@
                 </div>
             </div>
 
-            <div v-else-if="activeGroup && !activeEntryId" class="stack-view">
+            <div v-else-if="activeGroup && !activeEntryId" class="stack-view with-title">
                 <h1>{{ activeGroup.label }}</h1>
                 <p class="view-subtitle">Wähle eine Einstellung aus.</p>
 
@@ -251,8 +250,12 @@ const goBack = () => {
 }
 
 .view-subtitle {
-    margin: -0.45rem 0 0;
+    margin: 0;
     color: #6b7280;
+}
+
+.stack-view.with-title .view-subtitle {
+    margin-top: -0.45rem;
 }
 
 .list-card {
