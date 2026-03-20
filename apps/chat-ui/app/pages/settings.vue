@@ -1,230 +1,331 @@
 <template>
     <div class="settings-page">
-        <aside class="settings-sidebar">
-            <header class="sidebar-head">
-                <h1>Einstellungen</h1>
-                <p>Waehle links einen Bereich aus.</p>
-            </header>
+        <header v-if="activeGroupId || activeEntryId" class="settings-header">
+            <button v-if="activeGroupId || activeEntryId" type="button" class="back-btn" @click="goBack">
+                <span aria-hidden="true">←</span>
+                Zurück
+            </button>
 
-            <nav class="settings-nav" aria-label="Einstellungsbereiche">
-                <section v-for="group in settingGroups" :key="group.label" class="group">
-                    <h2>{{ group.label }}</h2>
-                    <div class="group-items">
-                        <button
-                            v-for="item in group.items"
-                            :key="item.id"
-                            class="nav-item"
-                            :class="{ active: activeSectionId === item.id }"
-                            type="button"
-                            @click="activeSectionId = item.id"
-                        >
-                            {{ item.label }}
-                        </button>
-                    </div>
-                </section>
+            <nav class="breadcrumb" aria-label="Pfad">
+                <button type="button" class="crumb" :class="{ active: !activeGroupId && !activeEntryId }"
+                    @click="goToRoot">
+                    Einstellungen
+                </button>
+
+                <template v-if="activeGroup">
+                    <span class="sep">/</span>
+                    <button type="button" class="crumb" :class="{ active: !!activeGroupId && !activeEntryId }"
+                        @click="goToGroup(activeGroup.id)">
+                        {{ activeGroup.label }}
+                    </button>
+                </template>
+
+                <template v-if="activeEntry">
+                    <span class="sep">/</span>
+                    <span class="crumb active">{{ activeEntry.label }}</span>
+                </template>
             </nav>
-        </aside>
+        </header>
 
         <section class="settings-content">
-            <component :is="activeComponent" />
+            <div v-if="!activeGroupId" class="stack-view">
+                <h1>Einstellungen</h1>
+                <p class="view-subtitle">Wähle einen Bereich aus.</p>
+
+                <div class="list-card">
+                    <button v-for="group in settingGroups" :key="group.id" type="button" class="list-row"
+                        @click="openGroup(group.id)">
+                        <span>{{ group.label }}</span>
+                        <span class="chevron" aria-hidden="true">›</span>
+                    </button>
+                </div>
+            </div>
+
+            <div v-else-if="activeGroup && !activeEntryId" class="stack-view">
+                <h1>{{ activeGroup.label }}</h1>
+                <p class="view-subtitle">Wähle eine Einstellung aus.</p>
+
+                <div class="list-card">
+                    <button v-for="entry in activeGroup.entries" :key="entry.id" type="button" class="list-row"
+                        @click="openEntry(entry.id)">
+                        <span>{{ entry.label }}</span>
+                        <span class="chevron" aria-hidden="true">›</span>
+                    </button>
+                </div>
+            </div>
+
+            <div v-else-if="activeComponent" class="detail-view">
+                <component :is="activeComponent" />
+            </div>
         </section>
     </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, type Component } from 'vue';
 import ChatBehaviorSettings from '~/components/settings/ChatBehaviorSettings.vue';
 import LocalStorageSettings from '~/components/settings/LocalStorageSettings.vue';
 import ProfileSettings from '~/components/settings/ProfileSettings.vue';
 
-type SettingsItem = {
+type SettingsEntry = {
     id: string;
     label: string;
-    component: object;
+    component: Component;
 };
 
 type SettingsGroup = {
+    id: string;
     label: string;
-    items: SettingsItem[];
+    entries: SettingsEntry[];
 };
 
 const settingGroups: SettingsGroup[] = [
     {
+        id: 'data',
         label: 'Daten',
-        items: [
+        entries: [
             { id: 'local-storage', label: 'LocalStorage', component: LocalStorageSettings }
         ]
     },
     {
+        id: 'chat',
         label: 'Chat',
-        items: [
+        entries: [
             { id: 'chat-behavior', label: 'Verhalten', component: ChatBehaviorSettings }
         ]
     },
     {
+        id: 'profile',
         label: 'Profil',
-        items: [
+        entries: [
             { id: 'profile', label: 'Allgemein', component: ProfileSettings }
         ]
     }
 ];
 
-const allItems = settingGroups.flatMap((group) => group.items);
-const activeSectionId = ref('local-storage');
+const activeGroupId = ref<string | null>(null);
+const activeEntryId = ref<string | null>(null);
 
-const activeComponent = computed(() => {
-    return allItems.find((item) => item.id === activeSectionId.value)?.component ?? LocalStorageSettings;
+const activeGroup = computed(() => {
+    if (!activeGroupId.value) return null;
+    return settingGroups.find((group) => group.id === activeGroupId.value) ?? null;
 });
+
+const activeEntry = computed(() => {
+    if (!activeGroup.value || !activeEntryId.value) return null;
+    return activeGroup.value.entries.find((entry) => entry.id === activeEntryId.value) ?? null;
+});
+
+const activeComponent = computed(() => activeEntry.value?.component ?? null);
+
+const openGroup = (groupId: string) => {
+    activeGroupId.value = groupId;
+    activeEntryId.value = null;
+};
+
+const openEntry = (entryId: string) => {
+    activeEntryId.value = entryId;
+};
+
+const goToRoot = () => {
+    activeGroupId.value = null;
+    activeEntryId.value = null;
+};
+
+const goToGroup = (groupId: string) => {
+    activeGroupId.value = groupId;
+    activeEntryId.value = null;
+};
+
+const goBack = () => {
+    if (activeEntryId.value) {
+        activeEntryId.value = null;
+        return;
+    }
+
+    if (activeGroupId.value) {
+        activeGroupId.value = null;
+    }
+};
 </script>
 
 <style scoped>
 .settings-page {
-    display: grid;
-    grid-template-columns: 220px minmax(0, 1fr);
-    gap: 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
     height: 100%;
     min-height: 0;
-    padding: 0.35rem;
+    padding: 0.5rem;
     box-sizing: border-box;
     background: #f5f5f7;
-    border-radius: 16px;
+    border-radius: 18px;
 }
 
-.settings-sidebar {
-    border: 1px solid #e6e6eb;
-    border-radius: 14px;
-    background: rgba(255, 255, 255, 0.82);
-    backdrop-filter: saturate(140%) blur(8px);
-    padding: 0.75rem;
-    min-height: 0;
-    overflow-y: auto;
-}
-
-.sidebar-head h1 {
-    margin: 0;
-    font-size: 1.05rem;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-}
-
-.sidebar-head p {
-    margin: 0.25rem 0 0;
-    color: #6e6e73;
-    font-size: 0.84rem;
-}
-
-.settings-nav {
-    margin-top: 0.85rem;
+.settings-header {
     display: flex;
-    flex-direction: column;
-    gap: 0.7rem;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.35rem;
 }
 
-.group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-}
-
-.group-items {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-}
-
-.group h2 {
-    margin: 0;
-    font-size: 0.72rem;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: #8e8e93;
-    font-weight: 600;
-}
-
-.nav-item {
-    border: 1px solid transparent;
-    background: transparent;
-    border-radius: 10px;
-    padding: 0.5rem 0.62rem;
-    text-align: left;
-    color: #4a4a50;
-    font-size: 0.92rem;
+.back-btn {
+    border: 1px solid #d8d8de;
+    background: #fff;
+    color: #1f2937;
+    border-radius: 999px;
+    height: 2rem;
+    padding: 0 0.65rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.9rem;
     font-weight: 500;
     cursor: pointer;
-    transition: background-color 120ms ease, color 120ms ease;
 }
 
-.nav-item:hover {
-    background: rgba(0, 0, 0, 0.04);
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.38rem;
+    min-width: 0;
 }
 
-.nav-item.active {
-    border-color: #d8d8de;
-    background: #fff;
-    color: #111111;
+.crumb {
+    border: none;
+    background: transparent;
+    color: #6b7280;
+    padding: 0;
+    font: inherit;
+    font-size: 0.92rem;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.crumb.active {
+    color: #111827;
     font-weight: 600;
+}
+
+.sep {
+    color: #9ca3af;
+    user-select: none;
 }
 
 .settings-content {
-    border: 1px solid #e6e6eb;
-    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
     background: #fff;
-    box-shadow: 0 1px 2px rgba(17, 24, 39, 0.05);
+    box-shadow: 0 2px 6px rgba(17, 24, 39, 0.05);
     min-height: 0;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     padding: 1rem;
 }
 
+.detail-view {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+}
+
+.detail-view>* {
+    flex: 1;
+    min-height: 0;
+}
+
+.stack-view {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+}
+
+.stack-view h1 {
+    margin: 0;
+    font-size: 1.45rem;
+    letter-spacing: -0.01em;
+}
+
+.view-subtitle {
+    margin: -0.45rem 0 0;
+    color: #6b7280;
+}
+
+.list-card {
+    border: 1px solid #e7e7ec;
+    border-radius: 14px;
+    background: #fff;
+    overflow: hidden;
+}
+
+.list-row {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #efeff3;
+    background: transparent;
+    padding: 0.85rem 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+    font: inherit;
+    color: #111827;
+    cursor: pointer;
+}
+
+.list-row:last-child {
+    border-bottom: none;
+}
+
+.list-row:hover {
+    background: #fafafa;
+}
+
+.chevron {
+    color: #9ca3af;
+    font-size: 1.05rem;
+}
+
 @media (max-width: 800px) {
     .settings-page {
-        grid-template-columns: 1fr;
-        gap: 0.65rem;
         padding: 0;
+        gap: 0.55rem;
+        border-radius: 0;
         background: transparent;
         padding-bottom: calc(env(safe-area-inset-bottom) + 0.75rem);
     }
 
-    .settings-sidebar {
-        overflow: visible;
-        padding: 0.6rem;
+    .settings-header {
+        padding: 0 0.1rem;
     }
 
-    .sidebar-head p {
-        display: none;
+    .back-btn {
+        height: 1.9rem;
+        padding: 0 0.58rem;
+        font-size: 0.86rem;
     }
 
-    .settings-nav {
-        margin-top: 0.55rem;
-        gap: 0.55rem;
-    }
-
-    .group {
-        gap: 0.35rem;
-        min-width: 0;
-    }
-
-    .group h2 {
-        font-size: 0.68rem;
-    }
-
-    .group-items {
-        flex-direction: row;
-        gap: 0.35rem;
-        white-space: nowrap;
+    .breadcrumb {
+        gap: 0.3rem;
         overflow-x: auto;
-        padding-bottom: 0.2rem;
         -webkit-overflow-scrolling: touch;
     }
 
-    .group .nav-item {
-        display: inline-flex;
-        width: auto;
+    .settings-content {
+        padding: 0.85rem;
+        border-radius: 14px;
     }
 
-    .settings-content {
-        min-height: 0;
-        padding: 0.85rem;
+    .stack-view h1 {
+        font-size: 1.25rem;
+    }
+
+    .list-row {
+        padding: 0.78rem 0.82rem;
     }
 }
 </style>

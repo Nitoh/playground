@@ -1,7 +1,7 @@
 <template>
     <div class="panel">
         <h2>Chat-Verhalten</h2>
-        <p class="subtitle">Interaktions- und Anzeigeoptionen fuer den Chat</p>
+        <p class="subtitle">Interaktions- und Anzeigeoptionen für den Chat</p>
 
         <div class="card">
             <label class="row">
@@ -19,7 +19,7 @@
                 <span>Kompakte Message-Bubbles</span>
             </label>
 
-            <p class="hint">Als separate Komponente vorbereitet, damit du den Bereich unabhaengig erweitern kannst.</p>
+            <p class="hint">Als separate Komponente vorbereitet, damit du den Bereich unabhängig erweitern kannst.</p>
         </div>
     </div>
 </template>

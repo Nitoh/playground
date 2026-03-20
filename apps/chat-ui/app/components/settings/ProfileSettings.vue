@@ -11,10 +11,10 @@
 
             <label class="field">
                 <span>Status</span>
-                <input v-model="status" type="text" placeholder="z. B. Verfuegbar" />
+                <input v-model="status" type="text" placeholder="z. B. Verfügbar" />
             </label>
 
-            <p class="hint">Dieses Panel ist als eigener Settings-Bereich vorbereitet und kann spaeter mit API-Calls
+            <p class="hint">Dieses Panel ist als eigener Settings-Bereich vorbereitet und kann später mit API-Calls
                 verbunden werden.</p>
         </div>
     </div>

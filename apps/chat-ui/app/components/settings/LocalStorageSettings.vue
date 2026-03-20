@@ -2,17 +2,16 @@
     <div class="local-storage-settings">
         <div class="panel-head">
             <h2>LocalStorage</h2>
-            <p class="subtitle">Eintraege anzeigen, bearbeiten, hinzufuegen und loeschen</p>
         </div>
 
         <div class="toolbar">
             <button class="btn" @click="reloadRows">Neu laden</button>
             <button class="btn btn-danger" @click="requestClearAll" :disabled="rows.length === 0">Alles
-                loeschen</button>
+                löschen</button>
         </div>
 
         <form class="add-form" @submit.prevent="addEntry">
-            <h3>Neuen Eintrag hinzufuegen</h3>
+            <h3>Neuen Eintrag hinzufügen</h3>
             <div class="grid">
                 <label class="field">
                     <span>Key</span>
@@ -55,12 +54,24 @@
 
                         <td class="actions-cell">
                             <template v-if="editingKey === row.key">
-                                <button class="btn btn-primary" @click="saveEdit(row.key)">Speichern</button>
-                                <button class="btn" @click="cancelEdit">Abbrechen</button>
+                                <button class="btn btn-primary" @click="saveEdit(row.key)">
+                                    <span class="label-full">Speichern</span>
+                                    <span class="label-compact">Save</span>
+                                </button>
+                                <button class="btn" @click="cancelEdit">
+                                    <span class="label-full">Abbrechen</span>
+                                    <span class="label-compact">Abbr.</span>
+                                </button>
                             </template>
                             <template v-else>
-                                <button class="btn" @click="startEdit(row.key, row.value)">Bearbeiten</button>
-                                <button class="btn btn-danger" @click="requestRemoveEntry(row.key)">Entfernen</button>
+                                <button class="btn" @click="startEdit(row.key, row.value)">
+                                    <span class="label-full">Bearbeiten</span>
+                                    <span class="label-compact">Bearb.</span>
+                                </button>
+                                <button class="btn btn-danger" @click="requestRemoveEntry(row.key)">
+                                    <span class="label-full">Entfernen</span>
+                                    <span class="label-compact">Entf.</span>
+                                </button>
                             </template>
                         </td>
                     </tr>
@@ -78,27 +89,27 @@
             <p class="modal-text">
                 Soll der Eintrag
                 <strong>{{ pendingDeleteKey }}</strong>
-                wirklich geloescht werden?
+                wirklich gelöscht werden?
             </p>
 
             <div class="modal-actions">
                 <button class="btn" type="button" @click="cancelRemoveEntry">Abbrechen</button>
-                <button class="btn btn-danger" type="button" @click="confirmRemoveEntry">Loeschen</button>
+                <button class="btn btn-danger" type="button" @click="confirmRemoveEntry">Löschen</button>
             </div>
         </BaseModal>
 
         <BaseModal :open="pendingClearAll" @close="cancelClearAll">
             <template #header>
-                <h3 class="modal-title">Alles loeschen?</h3>
+                <h3 class="modal-title">Alles löschen?</h3>
             </template>
 
             <p class="modal-text">
-                Soll der gesamte LocalStorage wirklich geloescht werden?
+                Soll der gesamte LocalStorage wirklich gelöscht werden?
             </p>
 
             <div class="modal-actions">
                 <button class="btn" type="button" @click="cancelClearAll">Abbrechen</button>
-                <button class="btn btn-danger" type="button" @click="confirmClearAll">Alles loeschen</button>
+                <button class="btn btn-danger" type="button" @click="confirmClearAll">Alles löschen</button>
             </div>
         </BaseModal>
     </div>
@@ -151,7 +162,7 @@ const setMessage = (text: string) => {
 const addEntry = () => {
     const key = newKey.value.trim();
     if (!key) {
-        setMessage('Bitte einen gueltigen Key eingeben.');
+        setMessage('Bitte einen gültigen Key eingeben.');
         return;
     }
 
@@ -214,7 +225,7 @@ const confirmClearAll = () => {
     cancelEdit();
     pendingClearAll.value = false;
     reloadRows();
-    setMessage('Alle Eintraege wurden geloescht.');
+    setMessage('Alle Einträge wurden gelöscht.');
 };
 
 onMounted(() => {
@@ -224,14 +235,57 @@ onMounted(() => {
 
 <style scoped>
 .local-storage-settings {
+    --panel-head-sticky-height: 3.25rem;
+    --panel-head-top-mask: 1.2rem;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0;
+    height: 100%;
     min-height: 0;
+    position: relative;
+}
+
+.local-storage-settings>*+* {
+    margin-top: 1rem;
+}
+
+.panel-head {
+    display: flex;
+    position: sticky;
+    top: 0;
+    margin: 0;
+    z-index: 30;
+    background: #fff;
+    isolation: isolate;
+    padding-top: 0.1rem;
+    padding-bottom: 0.55rem;
+    border-bottom: 1px solid #ececf0;
 }
 
 .panel-head h2 {
     margin: 0;
+}
+
+.panel-head::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -10px;
+    height: 10px;
+    pointer-events: none;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0));
+}
+
+.panel-head::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(-1 * var(--panel-head-top-mask));
+    height: var(--panel-head-top-mask);
+    background: #fff;
+    pointer-events: none;
 }
 
 .subtitle {
@@ -291,7 +345,11 @@ input {
 .table-wrap {
     border: 1px solid #e5e7eb;
     border-radius: 10px;
+    flex: 1;
+    min-height: 220px;
     overflow: auto;
+    position: relative;
+    z-index: 0;
 }
 
 .table {
@@ -311,6 +369,7 @@ input {
     background: #f9fafb;
     position: sticky;
     top: 0;
+    z-index: 10;
 }
 
 .key-cell {
@@ -332,6 +391,10 @@ input {
     gap: 0.4rem;
     flex-wrap: nowrap;
     white-space: nowrap;
+}
+
+.label-compact {
+    display: none;
 }
 
 .btn {
@@ -388,12 +451,46 @@ input {
 }
 
 @media (max-width: 800px) {
+    .local-storage-settings {
+        --panel-head-top-mask: 1rem;
+    }
+
+    .table-wrap {
+        min-height: 260px;
+    }
+
     .grid {
         grid-template-columns: minmax(0, 1fr);
     }
 
     .btn-add-entry {
         width: 100%;
+    }
+}
+
+@media (max-width: 640px) {
+
+    .table th,
+    .table td {
+        padding: 0.5rem;
+    }
+
+    .actions-cell {
+        gap: 0.28rem;
+    }
+
+    .actions-cell .btn {
+        padding: 0.3rem 0.45rem;
+        font-size: 0.78rem;
+        border-radius: 7px;
+    }
+
+    .label-full {
+        display: none;
+    }
+
+    .label-compact {
+        display: inline;
     }
 }
 </style>
