@@ -1,399 +1,230 @@
 <template>
     <div class="settings-page">
-        <h1>Einstellungen</h1>
-        <p class="subtitle">LocalStorage Verwaltung (anzeigen, hinzufügen, bearbeiten, entfernen)</p>
+        <aside class="settings-sidebar">
+            <header class="sidebar-head">
+                <h1>Einstellungen</h1>
+                <p>Waehle links einen Bereich aus.</p>
+            </header>
 
-        <div class="toolbar">
-            <button class="btn" @click="reloadRows">Neu laden</button>
-            <button class="btn btn-danger" @click="requestClearAll" :disabled="rows.length === 0">Alles löschen</button>
-        </div>
+            <nav class="settings-nav" aria-label="Einstellungsbereiche">
+                <section v-for="group in settingGroups" :key="group.label" class="group">
+                    <h2>{{ group.label }}</h2>
+                    <div class="group-items">
+                        <button
+                            v-for="item in group.items"
+                            :key="item.id"
+                            class="nav-item"
+                            :class="{ active: activeSectionId === item.id }"
+                            type="button"
+                            @click="activeSectionId = item.id"
+                        >
+                            {{ item.label }}
+                        </button>
+                    </div>
+                </section>
+            </nav>
+        </aside>
 
-        <form class="add-form" @submit.prevent="addEntry">
-            <h2>Neuen Eintrag hinzufügen</h2>
-            <div class="grid">
-                <label class="field">
-                    <span>Key</span>
-                    <input v-model="newKey" type="text" placeholder="z. B. chat_username" />
-                </label>
-                <label class="field">
-                    <span>Value</span>
-                    <input v-model="newValue" type="text" placeholder="z. B. Max" />
-                </label>
-                <button class="btn btn-primary btn-add-entry" type="submit" aria-label="Eintrag speichern"
-                    title="Eintrag speichern">
-                    +
-                </button>
-            </div>
-        </form>
-
-        <p v-if="message" class="message">{{ message }}</p>
-
-        <div class="table-wrap">
-            <table class="table" v-if="rows.length > 0">
-                <thead>
-                    <tr>
-                        <th>Key</th>
-                        <th>Value</th>
-                        <th>Aktionen</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="row in rows" :key="row.key">
-                        <td class="key-cell">{{ row.key }}</td>
-
-                        <td>
-                            <template v-if="editingKey === row.key">
-                                <input v-model="editingValue" type="text" class="inline-input" />
-                            </template>
-                            <template v-else>
-                                <span class="value-cell">{{ row.value }}</span>
-                            </template>
-                        </td>
-
-                        <td class="actions-cell">
-                            <template v-if="editingKey === row.key">
-                                <button class="btn btn-primary" @click="saveEdit(row.key)">Speichern</button>
-                                <button class="btn" @click="cancelEdit">Abbrechen</button>
-                            </template>
-                            <template v-else>
-                                <button class="btn" @click="startEdit(row.key, row.value)">Bearbeiten</button>
-                                <button class="btn btn-danger" @click="requestRemoveEntry(row.key)">Entfernen</button>
-                            </template>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <p v-else>LocalStorage ist aktuell leer.</p>
-        </div>
-
-        <BaseModal :open="pendingDeleteKey !== null" @close="cancelRemoveEntry">
-            <template #header>
-                <h3 class="modal-title">Eintrag entfernen?</h3>
-            </template>
-
-            <p class="modal-text">
-                Soll der Eintrag
-                <strong>{{ pendingDeleteKey }}</strong>
-                wirklich gelöscht werden?
-            </p>
-
-            <div class="modal-actions">
-                <button class="btn" type="button" @click="cancelRemoveEntry">Abbrechen</button>
-                <button class="btn btn-danger" type="button" @click="confirmRemoveEntry">Löschen</button>
-            </div>
-        </BaseModal>
-
-        <BaseModal :open="pendingClearAll" @close="cancelClearAll">
-            <template #header>
-                <h3 class="modal-title">Alles löschen?</h3>
-            </template>
-
-            <p class="modal-text">
-                Soll der gesamte LocalStorage wirklich gelöscht werden?
-            </p>
-
-            <div class="modal-actions">
-                <button class="btn" type="button" @click="cancelClearAll">Abbrechen</button>
-                <button class="btn btn-danger" type="button" @click="confirmClearAll">Alles löschen</button>
-            </div>
-        </BaseModal>
+        <section class="settings-content">
+            <component :is="activeComponent" />
+        </section>
     </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import BaseModal from '~/components/ui/BaseModal.vue';
+import { computed, ref } from 'vue';
+import ChatBehaviorSettings from '~/components/settings/ChatBehaviorSettings.vue';
+import LocalStorageSettings from '~/components/settings/LocalStorageSettings.vue';
+import ProfileSettings from '~/components/settings/ProfileSettings.vue';
 
-type StorageRow = {
-    key: string;
-    value: string;
+type SettingsItem = {
+    id: string;
+    label: string;
+    component: object;
 };
 
-const rows = ref<StorageRow[]>([]);
-const newKey = ref('');
-const newValue = ref('');
-const editingKey = ref<string | null>(null);
-const editingValue = ref('');
-const message = ref('');
-const pendingDeleteKey = ref<string | null>(null);
-const pendingClearAll = ref(false);
+type SettingsGroup = {
+    label: string;
+    items: SettingsItem[];
+};
 
-const reloadRows = () => {
-    const nextRows: StorageRow[] = [];
-
-    for (let i = 0; i < localStorage.length; i += 1) {
-        const key = localStorage.key(i);
-        if (!key) continue;
-
-        nextRows.push({
-            key,
-            value: localStorage.getItem(key) ?? ''
-        });
+const settingGroups: SettingsGroup[] = [
+    {
+        label: 'Daten',
+        items: [
+            { id: 'local-storage', label: 'LocalStorage', component: LocalStorageSettings }
+        ]
+    },
+    {
+        label: 'Chat',
+        items: [
+            { id: 'chat-behavior', label: 'Verhalten', component: ChatBehaviorSettings }
+        ]
+    },
+    {
+        label: 'Profil',
+        items: [
+            { id: 'profile', label: 'Allgemein', component: ProfileSettings }
+        ]
     }
+];
 
-    nextRows.sort((a, b) => a.key.localeCompare(b.key));
-    rows.value = nextRows;
-};
+const allItems = settingGroups.flatMap((group) => group.items);
+const activeSectionId = ref('local-storage');
 
-const setMessage = (text: string) => {
-    message.value = text;
-    window.setTimeout(() => {
-        if (message.value === text) {
-            message.value = '';
-        }
-    }, 2200);
-};
-
-const addEntry = () => {
-    const key = newKey.value.trim();
-    if (!key) {
-        setMessage('Bitte einen gültigen Key eingeben.');
-        return;
-    }
-
-    localStorage.setItem(key, newValue.value);
-    newKey.value = '';
-    newValue.value = '';
-    reloadRows();
-    setMessage('Eintrag gespeichert.');
-};
-
-const requestRemoveEntry = (key: string) => {
-    pendingDeleteKey.value = key;
-};
-
-const cancelRemoveEntry = () => {
-    pendingDeleteKey.value = null;
-};
-
-const confirmRemoveEntry = () => {
-    const key = pendingDeleteKey.value;
-    if (!key) return;
-
-    localStorage.removeItem(key);
-    if (editingKey.value === key) {
-        editingKey.value = null;
-        editingValue.value = '';
-    }
-    pendingDeleteKey.value = null;
-    reloadRows();
-    setMessage('Eintrag entfernt.');
-};
-
-const startEdit = (key: string, value: string) => {
-    editingKey.value = key;
-    editingValue.value = value;
-};
-
-const cancelEdit = () => {
-    editingKey.value = null;
-    editingValue.value = '';
-};
-
-const saveEdit = (key: string) => {
-    localStorage.setItem(key, editingValue.value);
-    cancelEdit();
-    reloadRows();
-    setMessage('Eintrag aktualisiert.');
-};
-
-const requestClearAll = () => {
-    pendingClearAll.value = true;
-};
-
-const cancelClearAll = () => {
-    pendingClearAll.value = false;
-};
-
-const confirmClearAll = () => {
-    localStorage.clear();
-    cancelEdit();
-    pendingClearAll.value = false;
-    reloadRows();
-    setMessage('Alle Einträge wurden gelöscht.');
-};
-
-onMounted(() => {
-    reloadRows();
+const activeComponent = computed(() => {
+    return allItems.find((item) => item.id === activeSectionId.value)?.component ?? LocalStorageSettings;
 });
 </script>
 
 <style scoped>
 .settings-page {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 0.9rem;
     height: 100%;
     min-height: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
-    padding-right: 0.25rem;
-    padding-bottom: calc(env(safe-area-inset-bottom) + 0.5rem);
+    padding: 0.35rem;
+    box-sizing: border-box;
+    background: #f5f5f7;
+    border-radius: 16px;
 }
 
-.subtitle {
-    margin: 0;
-    color: #4b5563;
-}
-
-.toolbar {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.add-form {
-    border: 1px solid #e5e7eb;
-    border-radius: 10px;
+.settings-sidebar {
+    border: 1px solid #e6e6eb;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.82);
+    backdrop-filter: saturate(140%) blur(8px);
     padding: 0.75rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
+    min-height: 0;
+    overflow-y: auto;
 }
 
-.add-form h2 {
+.sidebar-head h1 {
     margin: 0;
-    font-size: 1rem;
-}
-
-.grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
-    gap: 0.5rem;
-    align-items: end;
-}
-
-.field {
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-}
-
-.field span {
-    font-size: 0.9rem;
-    color: #374151;
-}
-
-input {
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    padding: 0.55rem;
-    font: inherit;
-}
-
-.message {
-    margin: 0;
-    color: #1d4ed8;
-}
-
-.table-wrap {
-    border: 1px solid #e5e7eb;
-    border-radius: 10px;
-    overflow: auto;
-}
-
-.table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.table th,
-.table td {
-    border-bottom: 1px solid #e5e7eb;
-    text-align: left;
-    vertical-align: top;
-    padding: 0.6rem;
-}
-
-.table th {
-    background: #f9fafb;
-    position: sticky;
-    top: 0;
-}
-
-.key-cell {
+    font-size: 1.05rem;
     font-weight: 600;
-    word-break: break-all;
+    letter-spacing: -0.01em;
 }
 
-.value-cell {
-    white-space: pre-wrap;
-    word-break: break-word;
+.sidebar-head p {
+    margin: 0.25rem 0 0;
+    color: #6e6e73;
+    font-size: 0.84rem;
 }
 
-.inline-input {
-    width: 100%;
-}
-
-.actions-cell {
+.settings-nav {
+    margin-top: 0.85rem;
     display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+
+.group {
+    display: flex;
+    flex-direction: column;
     gap: 0.4rem;
-    flex-wrap: nowrap;
-    white-space: nowrap;
 }
 
-.btn {
-    border: none;
-    border-radius: 8px;
-    background: #e5e7eb;
-    padding: 0.45rem 0.7rem;
-    cursor: pointer;
-    white-space: nowrap;
-}
-
-.btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.btn-primary {
-    background: #2563eb;
-    color: #fff;
-}
-
-.btn-danger {
-    background: #dc2626;
-    color: #fff;
-}
-
-.btn-add-entry {
-    width: 2.35rem;
-    height: 2.35rem;
-    padding: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    font-weight: 700;
-    line-height: 1;
-}
-
-.modal-title {
-    margin: 0;
-    font-size: 1.1rem;
-}
-
-.modal-text {
-    margin: 0;
-    line-height: 1.4;
-}
-
-.modal-actions {
-    margin-top: 1rem;
+.group-items {
     display: flex;
-    justify-content: flex-end;
-    gap: 0.5rem;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.group h2 {
+    margin: 0;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #8e8e93;
+    font-weight: 600;
+}
+
+.nav-item {
+    border: 1px solid transparent;
+    background: transparent;
+    border-radius: 10px;
+    padding: 0.5rem 0.62rem;
+    text-align: left;
+    color: #4a4a50;
+    font-size: 0.92rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 120ms ease, color 120ms ease;
+}
+
+.nav-item:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.nav-item.active {
+    border-color: #d8d8de;
+    background: #fff;
+    color: #111111;
+    font-weight: 600;
+}
+
+.settings-content {
+    border: 1px solid #e6e6eb;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(17, 24, 39, 0.05);
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 1rem;
 }
 
 @media (max-width: 800px) {
     .settings-page {
-        padding: 0.75rem;
+        grid-template-columns: 1fr;
+        gap: 0.65rem;
+        padding: 0;
+        background: transparent;
         padding-bottom: calc(env(safe-area-inset-bottom) + 0.75rem);
     }
 
-    .grid {
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+    .settings-sidebar {
+        overflow: visible;
+        padding: 0.6rem;
+    }
+
+    .sidebar-head p {
+        display: none;
+    }
+
+    .settings-nav {
+        margin-top: 0.55rem;
+        gap: 0.55rem;
+    }
+
+    .group {
+        gap: 0.35rem;
+        min-width: 0;
+    }
+
+    .group h2 {
+        font-size: 0.68rem;
+    }
+
+    .group-items {
+        flex-direction: row;
+        gap: 0.35rem;
+        white-space: nowrap;
+        overflow-x: auto;
+        padding-bottom: 0.2rem;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .group .nav-item {
+        display: inline-flex;
+        width: auto;
+    }
+
+    .settings-content {
+        min-height: 0;
+        padding: 0.85rem;
     }
 }
 </style>
