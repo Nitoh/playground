@@ -25,19 +25,13 @@ const updateHeight = () => {
     document.documentElement.style.setProperty('--shell-height', `${h}px`);
 };
 
-const preventBodyScroll = () => {
-    window.scrollTo(0, 0);
-};
-
 onMounted(() => {
     updateHeight();
     window.visualViewport?.addEventListener('resize', updateHeight);
-    window.visualViewport?.addEventListener('scroll', preventBodyScroll);
 });
 
 onUnmounted(() => {
     window.visualViewport?.removeEventListener('resize', updateHeight);
-    window.visualViewport?.removeEventListener('scroll', preventBodyScroll);
 });
 </script>
 
@@ -105,7 +99,8 @@ onUnmounted(() => {
     }
 
     .content {
-        overflow: hidden;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
         min-height: 0;
         padding: 0;
     }

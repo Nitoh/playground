@@ -5,7 +5,7 @@
 
         <div class="toolbar">
             <button class="btn" @click="reloadRows">Neu laden</button>
-            <button class="btn btn-danger" @click="clearAll" :disabled="rows.length === 0">Alles löschen</button>
+            <button class="btn btn-danger" @click="requestClearAll" :disabled="rows.length === 0">Alles löschen</button>
         </div>
 
         <form class="add-form" @submit.prevent="addEntry">
@@ -19,8 +19,11 @@
                     <span>Value</span>
                     <input v-model="newValue" type="text" placeholder="z. B. Max" />
                 </label>
+                <button class="btn btn-primary btn-add-entry" type="submit" aria-label="Eintrag speichern"
+                    title="Eintrag speichern">
+                    +
+                </button>
             </div>
-            <button class="btn btn-primary" type="submit">Eintrag speichern</button>
         </form>
 
         <p v-if="message" class="message">{{ message }}</p>
@@ -54,7 +57,7 @@
                             </template>
                             <template v-else>
                                 <button class="btn" @click="startEdit(row.key, row.value)">Bearbeiten</button>
-                                <button class="btn btn-danger" @click="removeEntry(row.key)">Entfernen</button>
+                                <button class="btn btn-danger" @click="requestRemoveEntry(row.key)">Entfernen</button>
                             </template>
                         </td>
                     </tr>
@@ -63,11 +66,44 @@
 
             <p v-else>LocalStorage ist aktuell leer.</p>
         </div>
+
+        <BaseModal :open="pendingDeleteKey !== null" @close="cancelRemoveEntry">
+            <template #header>
+                <h3 class="modal-title">Eintrag entfernen?</h3>
+            </template>
+
+            <p class="modal-text">
+                Soll der Eintrag
+                <strong>{{ pendingDeleteKey }}</strong>
+                wirklich gelöscht werden?
+            </p>
+
+            <div class="modal-actions">
+                <button class="btn" type="button" @click="cancelRemoveEntry">Abbrechen</button>
+                <button class="btn btn-danger" type="button" @click="confirmRemoveEntry">Löschen</button>
+            </div>
+        </BaseModal>
+
+        <BaseModal :open="pendingClearAll" @close="cancelClearAll">
+            <template #header>
+                <h3 class="modal-title">Alles löschen?</h3>
+            </template>
+
+            <p class="modal-text">
+                Soll der gesamte LocalStorage wirklich gelöscht werden?
+            </p>
+
+            <div class="modal-actions">
+                <button class="btn" type="button" @click="cancelClearAll">Abbrechen</button>
+                <button class="btn btn-danger" type="button" @click="confirmClearAll">Alles löschen</button>
+            </div>
+        </BaseModal>
     </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
+import BaseModal from '~/components/ui/BaseModal.vue';
 
 type StorageRow = {
     key: string;
@@ -80,6 +116,8 @@ const newValue = ref('');
 const editingKey = ref<string | null>(null);
 const editingValue = ref('');
 const message = ref('');
+const pendingDeleteKey = ref<string | null>(null);
+const pendingClearAll = ref(false);
 
 const reloadRows = () => {
     const nextRows: StorageRow[] = [];
@@ -121,12 +159,24 @@ const addEntry = () => {
     setMessage('Eintrag gespeichert.');
 };
 
-const removeEntry = (key: string) => {
+const requestRemoveEntry = (key: string) => {
+    pendingDeleteKey.value = key;
+};
+
+const cancelRemoveEntry = () => {
+    pendingDeleteKey.value = null;
+};
+
+const confirmRemoveEntry = () => {
+    const key = pendingDeleteKey.value;
+    if (!key) return;
+
     localStorage.removeItem(key);
     if (editingKey.value === key) {
         editingKey.value = null;
         editingValue.value = '';
     }
+    pendingDeleteKey.value = null;
     reloadRows();
     setMessage('Eintrag entfernt.');
 };
@@ -148,9 +198,18 @@ const saveEdit = (key: string) => {
     setMessage('Eintrag aktualisiert.');
 };
 
-const clearAll = () => {
+const requestClearAll = () => {
+    pendingClearAll.value = true;
+};
+
+const cancelClearAll = () => {
+    pendingClearAll.value = false;
+};
+
+const confirmClearAll = () => {
     localStorage.clear();
     cancelEdit();
+    pendingClearAll.value = false;
     reloadRows();
     setMessage('Alle Einträge wurden gelöscht.');
 };
@@ -166,8 +225,12 @@ onMounted(() => {
     flex-direction: column;
     gap: 1rem;
     height: 100%;
-    overflow: auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
     padding-right: 0.25rem;
+    padding-bottom: calc(env(safe-area-inset-bottom) + 0.5rem);
 }
 
 .subtitle {
@@ -196,8 +259,9 @@ onMounted(() => {
 
 .grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
     gap: 0.5rem;
+    align-items: end;
 }
 
 .field {
@@ -293,9 +357,43 @@ input {
     color: #fff;
 }
 
+.btn-add-entry {
+    width: 2.35rem;
+    height: 2.35rem;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.modal-title {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.modal-text {
+    margin: 0;
+    line-height: 1.4;
+}
+
+.modal-actions {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
 @media (max-width: 800px) {
+    .settings-page {
+        padding: 0.75rem;
+        padding-bottom: calc(env(safe-area-inset-bottom) + 0.75rem);
+    }
+
     .grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
     }
 }
 </style>
