@@ -100,18 +100,27 @@ onUnmounted(() => {
         left: 0;
         right: 0;
         grid-template-columns: 1fr;
-        grid-template-rows: auto 1fr;
+        grid-template-rows: 1fr auto;
         height: var(--shell-height, 100dvh);
         overflow: hidden;
     }
 
     .sidebar {
+        order: 2;
         border-right: none;
-        border-bottom: 1px solid #e5e7eb;
+        border-top: 1px solid #e5e7eb;
+        border-bottom: none;
         overflow-y: visible;
+        padding: 0.5rem 1rem;
+        padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
+    }
+
+    .brand {
+        display: none;
     }
 
     .content {
+        order: 1;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
         min-height: 0;
@@ -120,7 +129,19 @@ onUnmounted(() => {
 
     .menu {
         flex-direction: row;
-        flex-wrap: wrap;
+        width: 100%;
+    }
+
+    .link {
+        flex: 1;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.25rem;
+        font-size: 0.65rem;
+        letter-spacing: 0.01em;
+        padding: 0.45rem 0.25rem;
+        border-radius: 6px;
     }
 }
 </style>
