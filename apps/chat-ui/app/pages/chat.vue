@@ -1,22 +1,29 @@
 <template>
-    <div class="chat-page">
-        <div v-if="showUsernameModal" class="username-overlay">
-            <form class="username-modal" @submit.prevent="saveUsername">
-                <h2 class="username-title">Willkommen im Chat</h2>
-                <p class="username-text">Bitte wähle einen Usernamen, bevor du schreibst.</p>
-                <input v-model="usernameInput" class="username-input" type="text" maxlength="20" autocomplete="off"
-                    placeholder="Dein Username" />
-                <p v-if="usernameError" class="username-error">{{ usernameError }}</p>
-                <button type="submit" class="username-btn">Weiter</button>
-            </form>
-        </div>
+    <div class="chat-grid">
+        <ChatList :chatList="chats" />
 
-        <ChatHeader />
-        <div class="messages-area">
-            <MessageList :messages="messages" />
-        </div>
-        <div class="input-area">
-            <ChatInput @send-message="handleSendMessage" />
+        <div class="chat-page">
+            <ChatHeader />
+
+            <div class="messages-area">
+                <MessageList :messages="messages" />
+            </div>
+
+            <div class="input-area">
+                <ChatInput @send-message="handleSendMessage" />
+            </div>
+
+            <div v-if="showUsernameModal" class="username-overlay">
+                <form class="username-modal" @submit.prevent="saveUsername">
+                    <h2 class="username-title">Willkommen im Chat</h2>
+                    <p class="username-text">Bitte wähle einen Usernamen, bevor du schreibst.</p>
+                    <input v-model="usernameInput" class="username-input" type="text" maxlength="20" autocomplete="off"
+                        placeholder="Dein Username" />
+                    <p v-if="usernameError" class="username-error">{{ usernameError }}</p>
+                    <button type="submit" class="username-btn">Weiter</button>
+                </form>
+            </div>
+
         </div>
     </div>
 </template>
@@ -27,6 +34,7 @@ import MessageList from '~/components/chat/messageList.vue';
 import ChatHeader from '~/components/chat/chatHeader.vue';
 import ChatInput from '~/components/chat/chatInput.vue';
 import type { Message } from '~/types/message';
+import type { Chat } from '~/types/chat';
 
 const messages = ref<Message[]>([]);
 const username = ref('');
@@ -35,6 +43,27 @@ const usernameError = ref('');
 const showUsernameModal = ref(false);
 
 const USERNAME_STORAGE_KEY = 'chat_username';
+
+const chats = ref<Chat[]>([
+    {
+        id: 1,
+        name: 'Alice',
+        lastMessage: 'Hey, wie geht es dir?',
+        timestamp: new Date('2026-03-20T09:15:00')
+    },
+    {
+        id: 2,
+        name: 'Bob',
+        lastMessage: 'Lass uns morgen treffen.',
+        timestamp: new Date('2026-03-20T09:45:00')
+    },
+    {
+        id: 3,
+        name: 'Charlie',
+        lastMessage: 'Hast du das Dokument gesehen?',
+        timestamp: new Date('2026-03-20T10:05:00')
+    }
+]);
 
 onMounted(() => {
     const stored = localStorage.getItem(USERNAME_STORAGE_KEY)?.trim() ?? '';
@@ -76,6 +105,12 @@ const handleSendMessage = (message: string) => {
 </script>
 
 <style scoped>
+.chat-grid {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    height: 100%;
+}
+
 .chat-page {
     display: flex;
     flex-direction: column;

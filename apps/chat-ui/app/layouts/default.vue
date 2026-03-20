@@ -19,7 +19,7 @@
             </nav>
         </aside>
 
-        <main class="content">
+        <main class="content" :class="{ 'content--chat': route.path === '/chat' }">
             <slot />
         </main>
     </div>
@@ -28,6 +28,8 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue';
 import AppIcon from '~/components/ui/AppIcon.vue';
+
+const route = useRoute();
 
 const updateHeight = () => {
     const vv = window.visualViewport;
@@ -91,6 +93,10 @@ onUnmounted(() => {
     flex-direction: column;
     padding: 1rem;
     overflow: hidden;
+}
+
+.content--chat {
+    padding: 0;
 }
 
 @media (max-width: 800px) {
