@@ -1,9 +1,9 @@
 <template>
     <div class="chat-grid">
-        <ChatList :chatList="chats" />
+        <ChatList :chatList="chats" @open-chat="handleOpenChat" @open-chat-from-user="openChatFromUser" />
 
         <div class="chat-page">
-            <ChatHeader />
+            <ChatHeader :name="selectedChat?.name" :description="selectedChat?.description" />
 
             <div class="messages-area">
                 <MessageList :messages="messages" />
@@ -34,36 +34,29 @@ import MessageList from '~/components/chat/messageList.vue';
 import ChatHeader from '~/components/chat/chatHeader.vue';
 import ChatInput from '~/components/chat/chatInput.vue';
 import type { Message } from '~/types/message';
-import type { Chat } from '~/types/chat';
+import { type Chat } from '~/types/chat';
+import type { User } from '~/types/user';
+import sampleChats from '~/database/chatData.json';
 
 const messages = ref<Message[]>([]);
 const username = ref('');
 const usernameInput = ref('');
 const usernameError = ref('');
 const showUsernameModal = ref(false);
+const selectedChat = ref<Chat | null>(null);
 
 const USERNAME_STORAGE_KEY = 'chat_username';
 
-const chats = ref<Chat[]>([
-    {
-        id: 1,
-        name: 'Alice',
-        lastMessage: 'Hey, wie geht es dir?',
-        timestamp: new Date('2026-03-20T09:15:00')
-    },
-    {
-        id: 2,
-        name: 'Bob',
-        lastMessage: 'Lass uns morgen treffen.',
-        timestamp: new Date('2026-03-20T09:45:00')
-    },
-    {
-        id: 3,
-        name: 'Charlie',
-        lastMessage: 'Hast du das Dokument gesehen?',
-        timestamp: new Date('2026-03-20T10:05:00')
-    }
+const users = ref<User[]>([
+    { id: 1, name: 'Alice', status: 'online', isOnline: true },
+    { id: 2, name: 'Bob', status: 'offline', isOnline: false },
+    { id: 3, name: 'Charlie', status: 'online', isOnline: true }
 ]);
+
+const chats = ref<Chat[]>(sampleChats.map(chat => ({
+    ...chat,
+    timestamp: new Date(chat.timestamp)
+})));
 
 onMounted(() => {
     const stored = localStorage.getItem(USERNAME_STORAGE_KEY)?.trim() ?? '';
@@ -101,6 +94,20 @@ const handleSendMessage = (message: string) => {
             sender: 'bot'
         });
     }, 400);
+};
+
+const handleOpenChat = (chat: Chat) => {
+    selectedChat.value = chat;
+};
+
+const openChatFromUser = (user: User) => {
+    selectedChat.value = {
+        id: user.id,
+        name: user.name,
+        description: '',
+        lastMessage: '',
+        timestamp: new Date()
+    };
 };
 </script>
 

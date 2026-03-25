@@ -1,14 +1,17 @@
 <template>
     <header class="chat-header">
         <div class="header-content">
-            <h4 class="header-title">Vorname Name</h4>
-            <p class="header-subtitle">Beschreibung</p>
+            <h4 class="header-title">{{ props.name }}</h4>
+            <p class="header-subtitle">{{ props.description }}</p>
         </div>
     </header>
 </template>
 
 <script setup lang="ts">
-// You can add any necessary script logic here
+const props = defineProps<{
+    name: string | undefined;
+    description: string | undefined;
+}>();
 </script>
 
 <style scoped>

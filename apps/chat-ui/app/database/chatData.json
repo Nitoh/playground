@@ -1,0 +1,23 @@
+[
+    {
+        "id": 1,
+        "name": "Alice",
+        "description": "",
+        "lastMessage": "Hey, wie geht es dir?",
+        "timestamp": "2026-03-20T09:15:00"
+    },
+    {
+        "id": 2,
+        "name": "Bob",
+        "description": "",
+        "lastMessage": "Lass uns morgen treffen.",
+        "timestamp": "2026-03-20T09:45:00"
+    },
+    {
+        "id": 3,
+        "name": "Charlie",
+        "description": "",
+        "lastMessage": "Hast du das Dokument gesehen?",
+        "timestamp": "2026-03-20T10:05:00"
+    }
+]
