@@ -10,7 +10,8 @@
             <input v-model="searchQuery" type="text" placeholder="Suchen..." class="searchbar" />
         </div>
 
-        <div v-for="chat in filteredChats" :key="chat.id" class="chat-box" @click="() => openChat(chat)">
+        <div v-for="chat in filteredChats" :key="chat.id" class="chat-box"
+            :class="{ 'chat-box-active': chat.id === props.activeChatId }" @click="() => openChat(chat)">
             <div class="top-row">
                 <div class="chat-name">{{ chat.name }}</div>
                 <div class="chat-timestamp">{{ chat.timestamp.toLocaleString() }}</div>
@@ -40,6 +41,7 @@ import type { User } from '~/types/user';
 
 const props = defineProps<{
     chatList: Chat[];
+    activeChatId: number | null;
 }>();
 
 const emit = defineEmits<{
@@ -48,7 +50,6 @@ const emit = defineEmits<{
 }>();
 
 const searchQuery = ref('');
-const selectedChat = ref<Chat | null>(null);
 const isNewChatModalOpen = ref(false);
 
 const filteredChats = computed(() => {
@@ -69,12 +70,12 @@ const newChat = () => {
 }
 
 const openChat = (chat: Chat) => {
-    selectedChat.value = chat;
     emit('open-chat', chat);
 };
 
 const openChatFromUser = (user: User) => {
     emit('open-chat-from-user', user);
+    isNewChatModalOpen.value = false;
 };
 </script>
 
@@ -136,6 +137,11 @@ const openChatFromUser = (user: User) => {
 
 .chat-box:hover {
     background: #eef2f7;
+}
+
+.chat-box-active {
+    background: #dbeafe;
+    border-left: 3px solid #2563eb;
 }
 
 .top-row {

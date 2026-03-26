@@ -1,12 +1,18 @@
 <template>
     <div class="chat-grid">
-        <ChatList :chatList="chats" @open-chat="handleOpenChat" @open-chat-from-user="openChatFromUser" />
+        <div class="chat-list-pane" :class="{ 'mobile-hidden': selectedChat }">
+            <ChatList :chatList="chats" :activeChatId="activeChatId" @open-chat="handleOpenChat"
+                @open-chat-from-user="openChatFromUser" />
+        </div>
 
-        <div class="chat-page">
+        <div class="chat-page" :class="{ 'mobile-only-chat': selectedChat, 'mobile-hidden': !selectedChat }">
+            <div class="mobile-chat-nav">
+                <button class="back-btn" type="button" @click="goBackToChatList">←</button>
+            </div>
             <ChatHeader :name="selectedChat?.name" :description="selectedChat?.description" />
 
             <div class="messages-area">
-                <MessageList :messages="messages" />
+                <MessageList :messages="getCurrentMessages" />
             </div>
 
             <div class="input-area">
@@ -33,30 +39,29 @@ import { onMounted, ref } from 'vue';
 import MessageList from '~/components/chat/messageList.vue';
 import ChatHeader from '~/components/chat/chatHeader.vue';
 import ChatInput from '~/components/chat/chatInput.vue';
-import type { Message } from '~/types/message';
 import { type Chat } from '~/types/chat';
 import type { User } from '~/types/user';
-import sampleChats from '~/database/chatData.json';
 
-const messages = ref<Message[]>([]);
 const username = ref('');
 const usernameInput = ref('');
 const usernameError = ref('');
 const showUsernameModal = ref(false);
 const selectedChat = ref<Chat | null>(null);
 
+const { chats, openOrCreateChat, activeChatId, getCurrentMessages, addMessage } = useChat();
+
 const USERNAME_STORAGE_KEY = 'chat_username';
 
-const users = ref<User[]>([
-    { id: 1, name: 'Alice', status: 'online', isOnline: true },
-    { id: 2, name: 'Bob', status: 'offline', isOnline: false },
-    { id: 3, name: 'Charlie', status: 'online', isOnline: true }
-]);
+// const users = ref<User[]>([
+//     { id: 1, name: 'Alice', status: 'online', isOnline: true },
+//     { id: 2, name: 'Bob', status: 'offline', isOnline: false },
+//     { id: 3, name: 'Charlie', status: 'online', isOnline: true }
+// ]);
 
-const chats = ref<Chat[]>(sampleChats.map(chat => ({
-    ...chat,
-    timestamp: new Date(chat.timestamp)
-})));
+// const chats = ref<Chat[]>(sampleChats.map(chat => ({
+//     ...chat,
+//     timestamp: new Date(chat.timestamp)
+// })));
 
 onMounted(() => {
     const stored = localStorage.getItem(USERNAME_STORAGE_KEY)?.trim() ?? '';
@@ -83,31 +88,28 @@ const saveUsername = () => {
 };
 
 const handleSendMessage = (message: string) => {
-    if (!username.value) return;
+    if (!username.value || activeChatId.value === null) return;
 
-    messages.value.push({ id: messages.value.length + 1, text: message, sender: 'user' });
+    const chatId = activeChatId.value;
+    addMessage(chatId, message, 'user');
 
     setTimeout(() => {
-        messages.value.push({
-            id: Date.now() + 1,
-            text: 'Antwort von der anderen Seite',
-            sender: 'bot'
-        });
+        addMessage(chatId, 'Antwort von der anderen Seite', 'bot');
     }, 400);
 };
 
 const handleOpenChat = (chat: Chat) => {
     selectedChat.value = chat;
+    activeChatId.value = chat.id;
 };
 
 const openChatFromUser = (user: User) => {
-    selectedChat.value = {
-        id: user.id,
-        name: user.name,
-        description: '',
-        lastMessage: '',
-        timestamp: new Date()
-    };
+    selectedChat.value = openOrCreateChat(user.id);
+};
+
+const goBackToChatList = () => {
+    selectedChat.value = null;
+    activeChatId.value = null;
 };
 </script>
 
@@ -116,6 +118,10 @@ const openChatFromUser = (user: User) => {
     display: grid;
     grid-template-columns: 240px 1fr;
     height: 100%;
+}
+
+.chat-list-pane {
+    min-width: 0;
 }
 
 .chat-page {
@@ -143,6 +149,23 @@ const openChatFromUser = (user: User) => {
     flex-shrink: 0;
     padding-bottom: env(safe-area-inset-bottom);
     background: #fff;
+}
+
+.mobile-chat-nav {
+    display: none;
+    align-items: center;
+    padding: 0.35rem 0.5rem 0;
+    background: #fff;
+}
+
+.back-btn {
+    border: none;
+    background: transparent;
+    font-size: 1.5rem;
+    line-height: 1;
+    color: #1f2937;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
 }
 
 .username-overlay {
@@ -197,5 +220,29 @@ const openChatFromUser = (user: User) => {
     color: #fff;
     font-weight: 600;
     cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .chat-grid {
+        display: block;
+        height: 100%;
+    }
+
+    .chat-list-pane,
+    .chat-page {
+        height: 100%;
+    }
+
+    .mobile-hidden {
+        display: none;
+    }
+
+    .mobile-only-chat {
+        display: flex;
+    }
+
+    .mobile-chat-nav {
+        display: flex;
+    }
 }
 </style>
