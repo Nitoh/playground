@@ -27,9 +27,8 @@
                     <h5>Neuer Chat</h5>
                     <button class="btn-txt" style="visibility: hidden;">Platzhalter</button>
                 </div>
-                <div class="modal-searchbar">
-                    <input v-model="modalSearchQuery" type="text" placeholder="Benutzer suchen..."
-                        class="searchbar-modal" />
+                <div class="searchbar-container">
+                    <input v-model="modalSearchQuery" type="text" placeholder="Benutzer suchen..." class="searchbar" />
                 </div>
                 <UserList :search-query="modalSearchQuery" @open-new-chat="openChatFromUser" />
             </div>
@@ -188,17 +187,17 @@ const openChatFromUser = (user: User) => {
     background-color: var(--surface-main);
     border-radius: 0px;
     height: 100%;
-    padding: 1rem 0.25rem;
+    padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 0;
 }
 
 .modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-top: 1rem;
+    padding: 0.5rem;
 }
 
 .modal-header h5 {
@@ -213,20 +212,5 @@ const openChatFromUser = (user: User) => {
     cursor: pointer;
     font-size: 0.75rem;
     color: var(--text-main);
-}
-
-.modal-searchbar {
-    padding: 0.5rem;
-}
-
-.searchbar-modal {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid var(--border-subtle);
-    border-radius: 8px;
-    font-size: 0.9rem;
-    color: var(--text-main);
-    background: var(--surface-card);
-    box-sizing: border-box;
 }
 </style>

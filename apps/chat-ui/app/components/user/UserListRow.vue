@@ -1,14 +1,11 @@
 <template>
-    <div class="userlist-row" v-for="user in userList" :key="user.id" @click="openNewChat(user)">
-        <div class="userlist-header">
-            <h5>{{ user.name }}</h5>
+    <div class="chat-box" v-for="user in userList" :key="user.id" @click="openNewChat(user)">
+        <div class="top-row">
+            <div class="chat-name">{{ user.name }}</div>
+            <div class="chat-timestamp">{{ user.isOnline ? 'Online' : 'Offline' }}</div>
         </div>
 
-        <div class="userlist-body">
-            <p>Status: {{ user.status }}</p>
-            <p v-if="user.isOnline">Online</p>
-            <p v-else>Offline</p>
-        </div>
+        <div class="chat-last-message">Status: {{ user.status }}</div>
     </div>
 </template>
 
@@ -29,36 +26,39 @@ const openNewChat = (user: User) => {
 </script>
 
 <style scoped>
-.userlist-row {
+.chat-box {
     display: flex;
     flex-direction: column;
-    margin: 0rem;
-    padding: 0.25rem;
-    border-bottom: 1px solid #e5e7eb;
+    gap: 0.15rem;
+    padding: 0.5rem;
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
     cursor: pointer;
 }
 
-.userlist-header {
+.chat-box:hover {
+    background: var(--surface-elevated);
+}
+
+.top-row {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    /* gap: 0.25rem; */
-    font-size: 1rem;
 }
 
-.userlist-header h5 {
-    margin: 0rem;
-    font-weight: 600;
+.chat-name {
+    font-weight: bold;
+    font-size: 0.85rem;
+    color: var(--text-strong);
 }
 
-.userlist-body {
-    display: flex;
-    flex-direction: row;
-    /* gap: 0.25rem; */
+.chat-last-message {
+    color: var(--text-muted);
     font-size: 0.75rem;
 }
 
-.userlist-body p {
-    margin: 0.25rem 0rem;
-    /* margin: 0rem; */
+.chat-timestamp {
+    font-size: 0.65rem;
+    color: var(--text-muted);
 }
 </style>

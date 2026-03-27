@@ -91,6 +91,14 @@ type SettingsGroup = {
 
 const settingGroups: SettingsGroup[] = [
     {
+        id: 'profile',
+        label: 'Profil',
+        icon: 'user',
+        entries: [
+            { id: 'profile', label: 'Allgemein', icon: 'user', component: ProfileSettings }
+        ]
+    },
+    {
         id: 'data',
         label: 'Daten',
         icon: 'database',
@@ -112,14 +120,6 @@ const settingGroups: SettingsGroup[] = [
         icon: 'settings',
         entries: [
             { id: 'theme', label: 'Design & Theme', icon: 'settings', component: ThemeSettings }
-        ]
-    },
-    {
-        id: 'profile',
-        label: 'Profil',
-        icon: 'user',
-        entries: [
-            { id: 'profile', label: 'Allgemein', icon: 'user', component: ProfileSettings }
         ]
     }
 ];

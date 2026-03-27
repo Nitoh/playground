@@ -48,32 +48,6 @@ const filteredUsers = computed(() => {
 .userlist-container {
     display: flex;
     flex-direction: column;
-    margin: 0rem;
-    border-bottom: 1px solid var(--border-subtle);
-}
-
-.userlist-header {
-    display: flex;
-    align-items: center;
-    /* gap: 0.25rem; */
-    font-size: 1rem;
-}
-
-.userlist-header h5 {
-    margin: 0rem;
-    font-weight: 600;
-}
-
-.userlist-body {
-    display: flex;
-    flex-direction: row;
-    /* gap: 0.25rem; */
-    font-size: 0.75rem;
-}
-
-.userlist-body p {
-    margin: 0.25rem 0rem;
-    /* margin: 0rem; */
 }
 
 .empty-state {
