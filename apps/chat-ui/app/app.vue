@@ -7,12 +7,56 @@
   </div>
 </template>
 
+<script setup lang="ts">
+useTheme();
+</script>
+
 <style>
+:root {
+  --bg-main: #f2f5f9;
+  --bg-accent: radial-gradient(900px 450px at -10% -10%, #d7e8ff 0%, rgba(215, 232, 255, 0) 65%), radial-gradient(700px 380px at 110% 0%, #d8f3e6 0%, rgba(216, 243, 230, 0) 60%);
+  --surface-main: #f8fafc;
+  --surface-card: #ffffff;
+  --surface-elevated: #f5f9ff;
+  --text-strong: #0f172a;
+  --text-main: #1f2937;
+  --text-soft: #344154;
+  --text-muted: #5f6b7c;
+  --border-subtle: #dfe6ef;
+  --border-default: #c8d5e6;
+  --accent-strong: #1264d1;
+  --accent-soft: #e7f1ff;
+  --shadow-soft: 0 10px 24px rgba(19, 44, 78, 0.08);
+}
+
+:root[data-theme='dark'] {
+  --bg-main: #0b1220;
+  --bg-accent: radial-gradient(900px 450px at -10% -10%, rgba(20, 59, 116, 0.45) 0%, rgba(20, 59, 116, 0) 70%), radial-gradient(700px 380px at 110% 0%, rgba(18, 120, 95, 0.3) 0%, rgba(18, 120, 95, 0) 65%);
+  --surface-main: #111a2b;
+  --surface-card: #142038;
+  --surface-elevated: #1a2a45;
+  --text-strong: #f3f7ff;
+  --text-main: #dde7f8;
+  --text-soft: #c4d2e6;
+  --text-muted: #a6b5cc;
+  --border-subtle: #243653;
+  --border-default: #325077;
+  --accent-strong: #4ea1ff;
+  --accent-soft: rgba(78, 161, 255, 0.17);
+  --shadow-soft: 0 12px 26px rgba(0, 0, 0, 0.35);
+}
+
+html,
+body,
+#__nuxt {
+  height: 100%;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  background: #ffffff;
-  color: #111827;
-  /* height: 100%; */
+  font-family: 'Segoe UI', 'SF Pro Text', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: var(--bg-main);
+  background-image: var(--bg-accent);
+  color: var(--text-main);
 }
 </style>

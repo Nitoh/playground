@@ -21,8 +21,9 @@ const props = defineProps<{
     align-items: center;
     margin: 0rem;
     padding: 0.5rem;
-    background-color: #ffffff;
-    color: rgb(80, 78, 78);
+    background-color: var(--surface-card);
+    color: var(--text-main);
+    border-bottom: 1px solid var(--border-subtle);
 }
 
 .header-content {

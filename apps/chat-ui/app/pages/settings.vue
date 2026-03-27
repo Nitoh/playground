@@ -73,6 +73,7 @@ import AppIcon from '~/components/ui/AppIcon.vue';
 import ChatBehaviorSettings from '~/components/settings/ChatBehaviorSettings.vue';
 import LocalStorageSettings from '~/components/settings/LocalStorageSettings.vue';
 import ProfileSettings from '~/components/settings/ProfileSettings.vue';
+import ThemeSettings from '~/components/settings/ThemeSettings.vue';
 
 type SettingsEntry = {
     id: string;
@@ -103,6 +104,14 @@ const settingGroups: SettingsGroup[] = [
         icon: 'sliders',
         entries: [
             { id: 'chat-behavior', label: 'Verhalten', icon: 'sliders', component: ChatBehaviorSettings }
+        ]
+    },
+    {
+        id: 'appearance',
+        label: 'Darstellung',
+        icon: 'settings',
+        entries: [
+            { id: 'theme', label: 'Design & Theme', icon: 'settings', component: ThemeSettings }
         ]
     },
     {
@@ -170,8 +179,9 @@ const goBack = () => {
     min-height: 0;
     padding: 0.5rem;
     box-sizing: border-box;
-    background: #f5f5f7;
+    background: var(--surface-main);
     border-radius: 18px;
+    box-shadow: var(--shadow-soft);
 }
 
 .settings-header {
@@ -182,9 +192,9 @@ const goBack = () => {
 }
 
 .back-btn {
-    border: 1px solid #d8d8de;
-    background: #fff;
-    color: #1f2937;
+    border: 1px solid var(--border-default);
+    background: var(--surface-elevated);
+    color: var(--text-main);
     border-radius: 999px;
     height: 2rem;
     padding: 0 0.65rem;
@@ -209,7 +219,7 @@ const goBack = () => {
     gap: 0.25rem;
     border: none;
     background: transparent;
-    color: #6b7280;
+    color: var(--text-muted);
     padding: 0;
     font: inherit;
     font-size: 0.92rem;
@@ -218,12 +228,12 @@ const goBack = () => {
 }
 
 .crumb.active {
-    color: #111827;
+    color: var(--text-strong);
     font-weight: 600;
 }
 
 .sep {
-    color: #9ca3af;
+    color: var(--text-muted);
     user-select: none;
 }
 
@@ -231,10 +241,10 @@ const goBack = () => {
     display: flex;
     flex-direction: column;
     flex: 1;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--border-subtle);
     border-radius: 16px;
-    background: #fff;
-    box-shadow: 0 2px 6px rgba(17, 24, 39, 0.05);
+    background: var(--surface-card);
+    box-shadow: var(--shadow-soft);
     min-height: 0;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
@@ -267,7 +277,7 @@ const goBack = () => {
 
 .view-subtitle {
     margin: 0;
-    color: #6b7280;
+    color: var(--text-muted);
 }
 
 .stack-view.with-title .view-subtitle {
@@ -275,16 +285,16 @@ const goBack = () => {
 }
 
 .list-card {
-    border: 1px solid #e7e7ec;
+    border: 1px solid var(--border-subtle);
     border-radius: 14px;
-    background: #fff;
+    background: var(--surface-card);
     overflow: hidden;
 }
 
 .list-row {
     width: 100%;
     border: none;
-    border-bottom: 1px solid #efeff3;
+    border-bottom: 1px solid var(--border-subtle);
     background: transparent;
     padding: 0.85rem 0.9rem;
     display: flex;
@@ -292,7 +302,7 @@ const goBack = () => {
     justify-content: space-between;
     text-align: left;
     font: inherit;
-    color: #111827;
+    color: var(--text-main);
     cursor: pointer;
 }
 
@@ -301,7 +311,7 @@ const goBack = () => {
 }
 
 .list-row:hover {
-    background: #fafafa;
+    background: var(--surface-elevated);
 }
 
 .row-main {
@@ -311,7 +321,7 @@ const goBack = () => {
 }
 
 .chevron {
-    color: #9ca3af;
+    color: var(--text-muted);
 }
 
 @media (max-width: 800px) {

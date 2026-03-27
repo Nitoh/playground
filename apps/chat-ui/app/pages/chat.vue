@@ -148,14 +148,14 @@ const goBackToChatList = () => {
 .input-area {
     flex-shrink: 0;
     padding-bottom: env(safe-area-inset-bottom);
-    background: #fff;
+    background: var(--surface-card);
 }
 
 .mobile-chat-nav {
     display: none;
     align-items: center;
     padding: 0.35rem 0.5rem 0;
-    background: #fff;
+    background: var(--surface-card);
 }
 
 .back-btn {
@@ -163,7 +163,7 @@ const goBackToChatList = () => {
     background: transparent;
     font-size: 1.5rem;
     line-height: 1;
-    color: #1f2937;
+    color: var(--text-main);
     cursor: pointer;
     padding: 0.25rem 0.5rem;
 }
@@ -174,14 +174,15 @@ const goBackToChatList = () => {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(17, 24, 39, 0.5);
+    background: rgba(10, 18, 32, 0.55);
     z-index: 20;
     padding: 1rem;
 }
 
 .username-modal {
     width: min(420px, 100%);
-    background: #fff;
+    background: var(--surface-card);
+    border: 1px solid var(--border-subtle);
     border-radius: 12px;
     padding: 1rem;
     display: flex;
@@ -196,19 +197,21 @@ const goBackToChatList = () => {
 
 .username-text {
     margin: 0;
-    color: #4b5563;
+    color: var(--text-muted);
 }
 
 .username-input {
-    border: 1px solid #d1d5db;
+    border: 1px solid var(--border-default);
     border-radius: 8px;
     padding: 0.75rem;
     font-size: 16px;
+    background: var(--surface-elevated);
+    color: var(--text-main);
 }
 
 .username-error {
     margin: 0;
-    color: #b91c1c;
+    color: #e05d6f;
     font-size: 0.9rem;
 }
 
@@ -216,8 +219,8 @@ const goBackToChatList = () => {
     border: none;
     border-radius: 8px;
     padding: 0.75rem;
-    background: #2563eb;
-    color: #fff;
+    background: var(--accent-strong);
+    color: #ffffff;
     font-weight: 600;
     cursor: pointer;
 }

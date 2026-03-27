@@ -29,24 +29,27 @@ const emit = defineEmits<{
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(17, 24, 39, 0.5);
+    background: rgba(10, 18, 32, 0.55);
     z-index: 100;
     padding: 1rem;
 }
 
 .modal-card {
     width: min(480px, 100%);
-    background: #fff;
+    background: var(--surface-card);
+    border: 1px solid var(--border-subtle);
     border-radius: 12px;
     padding: 1rem;
     box-sizing: border-box;
+    box-shadow: var(--shadow-soft);
 }
 
 .modal-header {
     margin-bottom: 0.75rem;
+    color: var(--text-strong);
 }
 
 .modal-content {
-    color: #1f2937;
+    color: var(--text-main);
 }
 </style>

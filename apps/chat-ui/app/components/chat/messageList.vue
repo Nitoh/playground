@@ -38,7 +38,8 @@ watch(
     overflow-y: auto;
     height: 100%;
     border-radius: 0.5rem;
-    border: 0.5px solid #e5e7eb;
+    border: 0.5px solid var(--border-subtle);
+    background: var(--surface-card);
     box-sizing: border-box;
     min-height: 0;
     padding: 0.5rem;
@@ -69,11 +70,12 @@ watch(
     max-width: 70%;
     padding: 0.5rem 0.75rem;
     border-radius: 0.75rem;
-    background: #f3f4f6;
+    background: var(--surface-elevated);
+    color: var(--text-main);
 }
 
 .row-me .bubble {
-    background: #007bff;
-    color: white;
+    background: var(--accent-strong);
+    color: #ffffff;
 }
 </style>

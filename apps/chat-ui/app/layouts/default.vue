@@ -4,18 +4,23 @@
             <h2 class="brand">Chat UI</h2>
 
             <nav class="menu">
-                <NuxtLink to="/" class="link">
-                    <AppIcon name="home" :size="17" />
-                    <span>Home</span>
-                </NuxtLink>
-                <NuxtLink to="/chat" class="link">
-                    <AppIcon name="chat" :size="17" />
-                    <span>Chats</span>
-                </NuxtLink>
-                <NuxtLink to="/settings" class="link">
-                    <AppIcon name="settings" :size="17" />
-                    <span>Einstellungen</span>
-                </NuxtLink>
+                <div class="menu-top">
+                    <NuxtLink to="/" class="link">
+                        <AppIcon name="home" :size="17" />
+                        <span>Home</span>
+                    </NuxtLink>
+                    <NuxtLink to="/chat" class="link">
+                        <AppIcon name="chat" :size="17" />
+                        <span>Chats</span>
+                    </NuxtLink>
+                </div>
+                <div class="menu-bottom">
+                    <NuxtLink to="/settings" class="link">
+                        <AppIcon name="settings" :size="17" />
+                        <span>Einstellungen</span>
+                    </NuxtLink>
+                </div>
+
             </nav>
         </aside>
 
@@ -56,18 +61,35 @@ onUnmounted(() => {
 }
 
 .sidebar {
-    border-right: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--border-subtle);
     padding: 1rem;
-    background: #f8fafc;
+    background: var(--surface-main);
     overflow: auto;
 }
 
 .brand {
     margin: 0 0 1rem;
     font-size: 1.1rem;
+    color: var(--text-strong);
 }
 
 .menu {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: space-between;
+}
+
+.menu-top {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.menu-bottom {
+    margin-top: auto;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
@@ -78,13 +100,14 @@ onUnmounted(() => {
     align-items: center;
     gap: 0.45rem;
     text-decoration: none;
-    color: #111827;
+    color: var(--text-main);
     padding: 0.5rem 0.75rem;
     border-radius: 8px;
 }
 
 .link.router-link-active {
-    background: #e2e8f0;
+    background: var(--accent-soft);
+    color: var(--text-strong);
     font-weight: 600;
 }
 
@@ -114,7 +137,7 @@ onUnmounted(() => {
     .sidebar {
         order: 2;
         border-right: none;
-        border-top: 1px solid #e5e7eb;
+        border-top: 1px solid var(--border-subtle);
         border-bottom: none;
         overflow-y: visible;
         padding: 0.5rem 1rem;

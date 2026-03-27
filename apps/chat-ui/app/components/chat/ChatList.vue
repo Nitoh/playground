@@ -83,7 +83,7 @@ const openChatFromUser = (user: User) => {
 .chats-container {
     display: flex;
     flex-direction: column;
-    background-color: #f8fafc;
+    background-color: var(--surface-main);
     position: relative;
 }
 
@@ -99,8 +99,8 @@ const openChatFromUser = (user: User) => {
 }
 
 .btn-add {
-    background-color: #3b82f6;
-    color: white;
+    background-color: var(--accent-strong);
+    color: #ffffff;
     border: none;
     outline: none;
     border-radius: 50%;
@@ -120,14 +120,16 @@ const openChatFromUser = (user: User) => {
     width: 100%;
     padding: 0.5rem;
     margin: 0.5rem 0;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--border-subtle);
     border-radius: 12px;
     box-sizing: border-box;
+    color: var(--text-main);
+    background: var(--surface-card);
 }
 
 .chat-box {
-    border-top: 1px solid #e5e7eb;
-    border-bottom: 1px solid #e5e7eb;
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
     cursor: pointer;
     padding: 0.5rem;
     display: flex;
@@ -136,12 +138,12 @@ const openChatFromUser = (user: User) => {
 }
 
 .chat-box:hover {
-    background: #eef2f7;
+    background: var(--surface-elevated);
 }
 
 .chat-box-active {
-    background: #dbeafe;
-    border-left: 3px solid #2563eb;
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent-strong);
 }
 
 .top-row {
@@ -156,13 +158,13 @@ const openChatFromUser = (user: User) => {
 }
 
 .chat-last-message {
-    color: #4b5563;
+    color: var(--text-muted);
     font-size: 0.75rem;
 }
 
 .chat-timestamp {
     font-size: 0.65rem;
-    color: #6b7280;
+    color: var(--text-muted);
 }
 
 .new-chat-modal {
@@ -171,13 +173,14 @@ const openChatFromUser = (user: User) => {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(17, 24, 39, 0.5);
+    height: 100vh;
+    background: rgba(10, 18, 32, 0.55);
     z-index: 20;
 }
 
 .modal-content {
     width: min(420px, 100%);
-    background-color: #f8fafc;
+    background-color: var(--surface-main);
     border-radius: 0px;
     height: 100%;
     padding: 1rem 0.25rem;
@@ -204,6 +207,6 @@ const openChatFromUser = (user: User) => {
     outline: none;
     cursor: pointer;
     font-size: 0.75rem;
-    color: black;
+    color: var(--text-main);
 }
 </style>

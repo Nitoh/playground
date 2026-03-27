@@ -40,16 +40,17 @@ h2 {
 
 .subtitle {
     margin: 0;
-    color: #4b5563;
+    color: var(--text-muted);
 }
 
 .card {
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--border-subtle);
     border-radius: 10px;
     padding: 0.9rem;
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
+    background: var(--surface-card);
 }
 
 .field {
@@ -60,19 +61,21 @@ h2 {
 
 .field span {
     font-size: 0.9rem;
-    color: #374151;
+    color: var(--text-soft);
 }
 
 input {
-    border: 1px solid #d1d5db;
+    border: 1px solid var(--border-default);
     border-radius: 8px;
     padding: 0.55rem;
     font: inherit;
+    background: var(--surface-elevated);
+    color: var(--text-main);
 }
 
 .hint {
     margin: 0;
-    color: #6b7280;
+    color: var(--text-muted);
     font-size: 0.92rem;
 }
 </style>

@@ -100,18 +100,19 @@ const flagIconUrl = (code: string) => {
 
 .btn-ghost,
 .btn-primary {
-    border: none;
+    border: 1px solid var(--border-default);
     border-radius: 8px;
     padding: 0.5rem 0.75rem;
     cursor: pointer;
 }
 
 .btn-ghost {
-    background: #e5e7eb;
+    background: var(--surface-elevated);
+    color: var(--text-main);
 }
 
 .btn-primary {
-    background: #2563eb;
-    color: #fff;
+    background: var(--accent-strong);
+    color: #ffffff;
 }
 </style>

@@ -255,11 +255,11 @@ onMounted(() => {
     top: 0;
     margin: 0;
     z-index: 30;
-    background: #fff;
+    background: var(--surface-card);
     isolation: isolate;
     padding-top: 0.1rem;
     padding-bottom: 0.55rem;
-    border-bottom: 1px solid #ececf0;
+    border-bottom: 1px solid var(--border-subtle);
 }
 
 .panel-head h2 {
@@ -274,7 +274,7 @@ onMounted(() => {
     bottom: -10px;
     height: 10px;
     pointer-events: none;
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0));
+    background: linear-gradient(to bottom, color-mix(in srgb, var(--surface-card) 95%, transparent), transparent);
 }
 
 .panel-head::before {
@@ -284,13 +284,13 @@ onMounted(() => {
     right: 0;
     top: calc(-1 * var(--panel-head-top-mask));
     height: var(--panel-head-top-mask);
-    background: #fff;
+    background: var(--surface-card);
     pointer-events: none;
 }
 
 .subtitle {
     margin: 0.25rem 0 0;
-    color: #4b5563;
+    color: var(--text-muted);
 }
 
 .toolbar {
@@ -299,12 +299,13 @@ onMounted(() => {
 }
 
 .add-form {
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--border-subtle);
     border-radius: 10px;
     padding: 0.75rem;
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
+    background: var(--surface-card);
 }
 
 .add-form h3 {
@@ -327,25 +328,28 @@ onMounted(() => {
 
 .field span {
     font-size: 0.9rem;
-    color: #374151;
+    color: var(--text-soft);
 }
 
 input {
-    border: 1px solid #d1d5db;
+    border: 1px solid var(--border-default);
     border-radius: 8px;
     padding: 0.55rem;
     font: inherit;
+    background: var(--surface-elevated);
+    color: var(--text-main);
 }
 
 .message {
     margin: 0;
-    color: #1d4ed8;
+    color: var(--accent-strong);
 }
 
 .table-wrap {
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--border-subtle);
     border-radius: 10px;
     flex: 1;
+    background: var(--surface-card);
     min-height: 220px;
     overflow: auto;
     position: relative;
@@ -359,14 +363,15 @@ input {
 
 .table th,
 .table td {
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--border-subtle);
     text-align: left;
     vertical-align: top;
     padding: 0.6rem;
+    color: var(--text-main);
 }
 
 .table th {
-    background: #f9fafb;
+    background: var(--surface-elevated);
     position: sticky;
     top: 0;
     z-index: 10;
@@ -398,9 +403,10 @@ input {
 }
 
 .btn {
-    border: none;
+    border: 1px solid var(--border-default);
     border-radius: 8px;
-    background: #e5e7eb;
+    background: var(--surface-elevated);
+    color: var(--text-main);
     padding: 0.45rem 0.7rem;
     cursor: pointer;
     white-space: nowrap;
@@ -412,13 +418,15 @@ input {
 }
 
 .btn-primary {
-    background: #2563eb;
-    color: #fff;
+    background: var(--accent-strong);
+    border-color: var(--accent-strong);
+    color: #ffffff;
 }
 
 .btn-danger {
-    background: #dc2626;
-    color: #fff;
+    background: #d13a4b;
+    border-color: #d13a4b;
+    color: #ffffff;
 }
 
 .btn-add-entry {

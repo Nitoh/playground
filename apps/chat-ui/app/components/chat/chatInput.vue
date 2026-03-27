@@ -25,7 +25,7 @@ const sendMessage = () => {
 .container {
     display: flex;
     padding: 4px;
-    background-color: #f5f5f5;
+    background-color: var(--surface-elevated);
     border-radius: 8px;
     gap: 0.5rem;
 }
@@ -39,16 +39,18 @@ const sendMessage = () => {
 .input-field {
     flex: 1;
     padding: 8px;
-    border: 0.5px solid #ccc;
+    border: 1px solid var(--border-default);
     border-radius: 6px;
     font-size: 16px;
+    background: var(--surface-card);
+    color: var(--text-main);
     /* verhindert Auto-Zoom auf iOS Safari */
 }
 
 .btn-blue {
     padding: 8px 16px;
-    background-color: #007bff;
-    color: white;
+    background-color: var(--accent-strong);
+    color: #ffffff;
     border: none;
     border-radius: 6px;
     cursor: pointer;
