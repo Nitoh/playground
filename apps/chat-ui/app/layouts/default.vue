@@ -166,12 +166,18 @@ onUnmounted(() => {
     }
 
     .menu {
-        flex-direction: row;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.35rem;
         width: 100%;
     }
 
+    .menu-top,
+    .menu-bottom {
+        display: contents;
+    }
+
     .link {
-        flex: 1;
         flex-direction: column;
         align-items: center;
         justify-content: center;
