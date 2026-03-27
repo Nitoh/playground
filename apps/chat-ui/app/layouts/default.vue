@@ -1,7 +1,7 @@
 <template>
     <div class="shell">
         <aside class="sidebar">
-            <h2 class="brand">Chat UI</h2>
+            <h2 class="brand">Tschetz</h2>
 
             <nav class="menu">
                 <div class="menu-top">
@@ -55,7 +55,7 @@ onUnmounted(() => {
 <style scoped>
 .shell {
     display: grid;
-    grid-template-columns: 240px 1fr;
+    grid-template-columns: 85px 1fr;
     height: var(--shell-height, 100dvh);
     overflow: hidden;
 }
@@ -64,15 +64,19 @@ onUnmounted(() => {
     display: flex;
     flex-direction: column;
     border-right: 1px solid var(--border-subtle);
-    padding: 1rem;
+    padding: 0.75rem 0.5rem;
     background: var(--surface-main);
     overflow: auto;
 }
 
 .brand {
-    margin: 0 0 1rem;
-    font-size: 1.1rem;
+    margin: 0 0 0.75rem;
+    font-size: 0.8rem;
     color: var(--text-strong);
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .menu {
@@ -85,24 +89,29 @@ onUnmounted(() => {
 .menu-top {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.4rem;
 }
 
 .menu-bottom {
     margin-top: auto;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.4rem;
 }
 
 .link {
-    display: inline-flex;
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 0.45rem;
+    justify-content: center;
+    gap: 0.2rem;
     text-decoration: none;
     color: var(--text-main);
-    padding: 0.5rem 0.75rem;
-    border-radius: 8px;
+    padding: 0.5rem 0.4rem;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    text-align: center;
+    line-height: 1.2;
 }
 
 .link.router-link-active {
@@ -169,7 +178,7 @@ onUnmounted(() => {
         gap: 0.25rem;
         font-size: 0.65rem;
         letter-spacing: 0.01em;
-        padding: 0.45rem 0.25rem;
+        padding: 0.5rem 0.25rem;
         border-radius: 6px;
     }
 }

@@ -25,9 +25,13 @@
                 <div class="modal-header">
                     <button class="btn-txt" @click="isNewChatModalOpen = false">Abbrechen</button>
                     <h5>Neuer Chat</h5>
-                    <button class="btn-txt">Nachricht</button>
+                    <button class="btn-txt" style="visibility: hidden;">Platzhalter</button>
                 </div>
-                <UserList @open-new-chat="openChatFromUser" />
+                <div class="modal-searchbar">
+                    <input v-model="modalSearchQuery" type="text" placeholder="Benutzer suchen..."
+                        class="searchbar-modal" />
+                </div>
+                <UserList :search-query="modalSearchQuery" @open-new-chat="openChatFromUser" />
             </div>
         </div>
     </div>
@@ -50,6 +54,7 @@ const emit = defineEmits<{
 }>();
 
 const searchQuery = ref('');
+const modalSearchQuery = ref('');
 const isNewChatModalOpen = ref(false);
 
 const filteredChats = computed(() => {
@@ -208,5 +213,20 @@ const openChatFromUser = (user: User) => {
     cursor: pointer;
     font-size: 0.75rem;
     color: var(--text-main);
+}
+
+.modal-searchbar {
+    padding: 0.5rem;
+}
+
+.searchbar-modal {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: var(--text-main);
+    background: var(--surface-card);
+    box-sizing: border-box;
 }
 </style>
