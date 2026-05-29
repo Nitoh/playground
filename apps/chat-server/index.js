@@ -3,8 +3,14 @@ import http from 'http'
 import { Server } from 'socket.io'
 import cors from 'cors'
 
+import authRouter from './modules/auth/auth.routes.js';
+import userRouter from './modules/user/user.routes.js';
+
 const app = express();
+app.use(express.json());
 app.use(cors());
+app.use('/auth', authRouter);
+app.use('/users', userRouter);
 
 const server = http.createServer(app);
 const io = new Server(server, {
