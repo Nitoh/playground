@@ -1,0 +1,12 @@
+{
+    "name": "Playground",
+    "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "vscode-icons-team.vscode-icons"
+
+            ]
+        }
+    },
+}
